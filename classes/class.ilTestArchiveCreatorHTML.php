@@ -100,7 +100,7 @@ class ilTestArchiveCreatorHTML
         }
 
         // specific content styles, see ilPortfolioPageGUI
-        $tpl->setVariable("LOCATION_ADDITIONAL_STYLESHEET", ilObjStyleSheet::getPlaceHolderStylePath());
+//        $tpl->setVariable("LOCATION_ADDITIONAL_STYLESHEET", ilObjStyleSheet::getPlaceHolderStylePath());
         $tpl->setVariable("LOCATION_SYNTAX_STYLESHEET", ilObjStyleSheet::getSyntaxStylePath());
 
         // system style

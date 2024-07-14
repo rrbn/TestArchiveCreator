@@ -85,7 +85,6 @@ class ilTestArchiveCreatorList
 		}
 
 		$writer = new ilCSVWriter();
-        $writer->setDoUTF8Decoding(true);
         $writer->setDelimiter('"');
 		$writer->setSeparator(';');
 
@@ -93,7 +92,7 @@ class ilTestArchiveCreatorList
 		{
 			foreach ($row as $column)
 			{
-				$writer->addColumn((string) $column);
+				$writer->addColumn((string) mb_convert_encoding($column, 'ISO-8859-1', 'UTF-8'));
 			}
             $writer->addRow();
 		}

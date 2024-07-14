@@ -149,85 +149,90 @@ class ilTestArchiveCreatorAssets
      */
     protected function processUrl(string $url, bool $in_asset = false) : string
     {
-        $parsed = parse_url(str_replace(ILIAS_HTTP_PATH, '.', $url));
-        $asset_name = null;
+        try {
+            $parsed = parse_url(str_replace(ILIAS_HTTP_PATH, '.', $url));
+            $asset_name = null;
 
-        if (!empty($resource_id = $this->getResourceId($parsed['query'] ?? ''))) {
-            // url an ILIAS call to deliver a file resource
+            if (!empty($resource_id = $this->getResourceId($parsed['query'] ?? ''))) {
+                // url is an ILIAS call to deliver a file resource
 
-            $manager = $this->resource_storage->manage();
+                $manager = $this->resource_storage->manage();
 
-            if (!empty($identification = $manager->find($resource_id))) {
-                $resource = $manager->getResource($identification);
-                $extension = $resource->getCurrentRevision()->getInformation()->getSuffix();
+                if (!empty($identification = $manager->find($resource_id))) {
+                    $resource = $manager->getResource($identification);
+                    $extension = $resource->getCurrentRevision()->getInformation()->getSuffix();
 
-                $asset_name = sha1($resource_id) . '.' . $extension;
-                $sec_name = sha1($resource_id) . '.' . $extension . '.sec';
-
-                if ($this->copy_assets
-                    && !$this->storage->has($this->storage_path . '/' . $asset_name)
-                    && !$this->storage->has($this->storage_path . '/' . $sec_name)
-                ) {
-                    $consumer = $this->resource_storage->consume()->stream($identification);
-                    $this->storage->writeStream($this->storage_path . '/' . $asset_name, $consumer->getStream());
-                }
-            }
-        }
-        elseif (isset($parsed['path'])) {
-            // url is a direct path to an asset
-
-            $system = $this->filesystems->deriveFilesystemFrom($parsed['path']);
-            $path = $this->filesystems->createRelativePath($parsed['path']);
-
-            if (isset($system) && isset($path)) {
-                $info = pathinfo($path);
-                $extension = $info['extension'] ?? '';
-
-                if ($this->checkExtension($extension) && $system->has($path) && !$system->hasDir($path)) {
-
-                    $asset_name = sha1($parsed['path']) . '.' . $extension;
-                    $sec_name = sha1($parsed['path']) . $extension . '.sec';
-
-                    // process urls in the asset content
-                    $content = null;
-                    if ($extension == 'css') {
-                        $content = $this->processStyle($system->read($path), $parsed['path'], true);
-                    }
+                    $asset_name = sha1($resource_id) . '.' . $extension;
+                    $sec_name = sha1($resource_id) . '.' . $extension . '.sec';
 
                     if ($this->copy_assets
                         && !$this->storage->has($this->storage_path . '/' . $asset_name)
-                        && !$this->storage->has($this->storage_path . '/' . $sec_name)) {
-                        if (isset($content)) {
-                            $this->storage->write($this->storage_path . '/' . $asset_name, $content);
-                        } else {
-                            $this->storage->writeStream($this->storage_path . '/' . $asset_name, $system->readStream($path));
+                        && !$this->storage->has($this->storage_path . '/' . $sec_name)
+                    ) {
+                        $consumer = $this->resource_storage->consume()->stream($identification);
+                        $this->storage->writeStream($this->storage_path . '/' . $asset_name, $consumer->getStream());
+                    }
+                }
+            }
+            elseif (isset($parsed['path'])) {
+                // url is a direct path to an asset
+
+                $system = $this->filesystems->deriveFilesystemFrom($parsed['path']);
+                $path = $this->filesystems->createRelativePath($parsed['path']);
+
+                if (isset($system) && isset($path)) {
+                    $info = pathinfo($path);
+                    $extension = $info['extension'] ?? '';
+
+                    if ($this->checkExtension($extension) && $system->has($path) && !$system->hasDir($path)) {
+
+                        $asset_name = sha1($parsed['path']) . '.' . $extension;
+                        $sec_name = sha1($parsed['path']) . $extension . '.sec';
+
+                        // process urls in the asset content
+                        $content = null;
+                        if ($extension == 'css') {
+                            $content = $this->processStyle($system->read($path), $parsed['path'], true);
+                        }
+
+                        if ($this->copy_assets
+                            && !$this->storage->has($this->storage_path . '/' . $asset_name)
+                            && !$this->storage->has($this->storage_path . '/' . $sec_name)) {
+                            if (isset($content)) {
+                                $this->storage->write($this->storage_path . '/' . $asset_name, $content);
+                            } else {
+                                $this->storage->writeStream($this->storage_path . '/' . $asset_name, $system->readStream($path));
+                            }
                         }
                     }
                 }
             }
+
+            // asset is found or created
+            if (isset($asset_name)) {
+                $asset = new ilTestArchiveCreatorAsset($this->assets->creator);
+                $asset->asset_name = $asset_name;
+                $asset->original_url = $url;
+                if (!$this->assets->has($asset)) {
+                    $this->assets->add($asset);
+                }
+
+                if (!$in_asset || $this->linking_path == $this->assets_url) {
+                    // offline link to asset directory or online url to delivery script
+                    return $this->linking_path . '/' . $asset_name;
+                }
+                else {
+                    // offline link from asset to asset (same directory)
+                    return $asset_name;
+                }
+            }
+
+            // leave original url if asset can't be processed
+            return $url;
         }
-
-        // asset is found or created
-        if (isset($asset_name)) {
-            $asset = new ilTestArchiveCreatorAsset($this->assets->creator);
-            $asset->asset_name = $asset_name;
-            $asset->original_url = $url;
-            if (!$this->assets->has($asset)) {
-                $this->assets->add($asset);
-            }
-
-            if (!$in_asset || $this->linking_path == $this->assets_url) {
-                // offline link to asset directory or online url to delivery script
-                return $this->linking_path . '/' . $asset_name;
-            }
-            else {
-                // offline link from asset to asset (same directory)
-                return $asset_name;
-            }
+        catch (Throwable $e) {
+            return $url;
         }
-
-        // leave original url if asset can't be processed
-        return $url;
     }
 
 

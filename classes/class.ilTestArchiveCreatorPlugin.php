@@ -254,6 +254,7 @@ class ilTestArchiveCreatorPlugin extends ilUserInterfaceHookPlugin
             $own_wrapper,
             $dic->refinery(),
             $dic["component.factory"],
+            new ilCtrlSubject(),
             new ilCtrlQueryRegexParser()
         );
 

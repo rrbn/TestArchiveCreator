@@ -1,6 +1,7 @@
 <?php
 // Copyright (c) 2017 Institut fuer Lern-Innovation, Friedrich-Alexander-Universitaet Erlangen-Nuernberg, GPLv3, see LICENSE
 use ILIAS\Filesystem\Filesystem;
+use ILIAS\TestQuestionPool\QuestionInfoService;
 
 /**
  * Creation of test archives
@@ -10,6 +11,7 @@ class ilTestArchiveCreator
     protected ilDBInterface $db;
     protected ilLanguage $lng;
     protected Filesystem $storage;
+    protected QuestionInfoService $question_info;
 
     public ilTestArchiveCreatorPlugin $plugin;
 	public ilTestArchiveCreatorConfig $config;
@@ -47,11 +49,13 @@ class ilTestArchiveCreator
 		$this->db = $DIC->database();
 		$this->lng = $DIC->language();
         $this->storage = $DIC->filesystem()->storage();
+        $this->question_info = $DIC->testQuestionPool()->questionInfo();
 
 		$this->plugin = $plugin;
 		$this->config = $plugin->getConfig();
 		$this->settings = $plugin->getSettings($obj_id);
         $this->filesystems = new ilTestArchiveCreatorFileSystems();
+
 
 		$this->testObj = new ilObjTest($obj_id, false);
         $this->workdir = $this->plugin->getWorkdir($this->testObj->getId());
@@ -245,7 +249,7 @@ class ilTestArchiveCreator
                 $users[$log['user_fi']] = ilObjUser::_lookupName((int) $log['user_fi']);
             }
             if (isset($log['question_fi']) && !isset($titles[$log['question_fi']])) {
-                $titles[$log['question_fi']] = assQuestion::_getQuestionTitle((int) $log['question_fi']);
+                $titles[$log['question_fi']] = $this->question_info->getQuestionTitle((int) $log['question_fi']);
             }
 
             $entry = new ilTestArchiveCreatorLogEntry($this);
