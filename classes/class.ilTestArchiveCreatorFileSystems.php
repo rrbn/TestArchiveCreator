@@ -58,9 +58,9 @@ class ilTestArchiveCreatorFileSystems
      * Get the storage filesystem without whitelist decorator
      * Used to prevent .sec files written when fonts are copied to the archive
      */
-    public function getPureStorage() : Filesystem
+    public function getPureStorage(): Filesystem
     {
-        $factory =  new FlySystemFilesystemFactory();
+        $factory = new FlySystemFilesystemFactory();
         return $factory->getLocal(new LocalConfig(CLIENT_DATA_DIR));
     }
 
@@ -69,7 +69,7 @@ class ilTestArchiveCreatorFileSystems
      * Get the plugin specific relation from paths to filesystems
      * @return array path => file system
      */
-    private function systemsByPath() : array
+    private function systemsByPath(): array
     {
         return [
             './Modules' => $this->modules,
@@ -101,8 +101,7 @@ class ilTestArchiveCreatorFileSystems
             }
             // then try the standard filesystems
             return LegacyPathHelper::deriveFilesystemFrom($absolute_path);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
     }
@@ -128,8 +127,7 @@ class ilTestArchiveCreatorFileSystems
             // then try the standard filesystems
             return LegacyPathHelper::createRelativePath($absolute_path);
 
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
     }
@@ -186,25 +184,26 @@ class ilTestArchiveCreatorFileSystems
      * @param string $a_space_replace
      * @return mixed|string
      */
-    public function sanitizeFilename($f, $a_space_replace = '_') {
+    public function sanitizeFilename($f, $a_space_replace = '_')
+    {
         // a combination of various methods
         // we don't want to convert html entities, or do any url encoding
         // we want to retain the "essence" of the original file name, if possible
         // char replace table found at:
         // http://www.php.net/manual/en/function.strtr.php#98669
         $replace_chars = array(
-            'Š'=>'S', 'š'=>'s', 'Ð'=>'Dj','Ž'=>'Z', 'ž'=>'z', 'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'Ae',
-            'Å'=>'A', 'Æ'=>'A', 'Ç'=>'C', 'È'=>'E', 'É'=>'E', 'Ê'=>'E', 'Ë'=>'E', 'Ì'=>'I', 'Í'=>'I', 'Î'=>'I',
-            'Ï'=>'I', 'Ñ'=>'N', 'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O', 'Õ'=>'O', 'Ö'=>'Oe', 'Ø'=>'O', 'Ù'=>'U', 'Ú'=>'U',
-            'Û'=>'U', 'Ü'=>'Ue', 'Ý'=>'Y', 'Þ'=>'B', 'ß'=>'ss','à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'ae', 'ä'=>'a',
-            'å'=>'a', 'æ'=>'a', 'ç'=>'c', 'è'=>'e', 'é'=>'e', 'ê'=>'e', 'ë'=>'e', 'ì'=>'i', 'í'=>'i', 'î'=>'i',
-            'ï'=>'i', 'ð'=>'o', 'ñ'=>'n', 'ò'=>'o', 'ó'=>'o', 'ô'=>'o', 'õ'=>'o', 'ö'=>'oe', 'ø'=>'o', 'ù'=>'u',
-            'ü'=>'ue', 'ú'=>'u', 'û'=>'u', 'ý'=>'y', 'þ'=>'b', 'ÿ'=>'y', 'ƒ'=>'f'
+            'Š' => 'S', 'š' => 's', 'Ð' => 'Dj','Ž' => 'Z', 'ž' => 'z', 'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'Ae',
+            'Å' => 'A', 'Æ' => 'A', 'Ç' => 'C', 'È' => 'E', 'É' => 'E', 'Ê' => 'E', 'Ë' => 'E', 'Ì' => 'I', 'Í' => 'I', 'Î' => 'I',
+            'Ï' => 'I', 'Ñ' => 'N', 'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O', 'Õ' => 'O', 'Ö' => 'Oe', 'Ø' => 'O', 'Ù' => 'U', 'Ú' => 'U',
+            'Û' => 'U', 'Ü' => 'Ue', 'Ý' => 'Y', 'Þ' => 'B', 'ß' => 'ss','à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'ae', 'ä' => 'a',
+            'å' => 'a', 'æ' => 'a', 'ç' => 'c', 'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i',
+            'ï' => 'i', 'ð' => 'o', 'ñ' => 'n', 'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'oe', 'ø' => 'o', 'ù' => 'u',
+            'ü' => 'ue', 'ú' => 'u', 'û' => 'u', 'ý' => 'y', 'þ' => 'b', 'ÿ' => 'y', 'ƒ' => 'f'
         );
         $f = strtr($f, $replace_chars);
         // convert & to "and", @ to "at", and # to "number"
         $f = preg_replace(array('/[\&]/', '/[\@]/', '/[\#]/'), array('-and-', '-at-', '-number-'), $f);
-        $f = preg_replace('/[^(\x20-\x7F)]*/','', $f); // removes any special chars we missed
+        $f = preg_replace('/[^(\x20-\x7F)]*/', '', $f); // removes any special chars we missed
         $f = str_replace(' ', $a_space_replace, $f); // convert space to hyphen
         $f = str_replace("'", '', $f); 	// removes single apostrophes
         $f = str_replace('"', '', $f);  // removes double apostrophes
@@ -220,13 +219,13 @@ class ilTestArchiveCreatorFileSystems
      * @param string $path
      * @return string
      */
-    public function removeDots(string $path) :string
+    public function removeDots(string $path): string
     {
         $root = ($path[0] === '/') ? '/' : '';
 
         $segments = explode('/', trim($path, '/'));
         $ret = array();
-        foreach($segments as $segment){
+        foreach($segments as $segment) {
             if (($segment == '.') || strlen($segment) === 0) {
                 continue;
             }

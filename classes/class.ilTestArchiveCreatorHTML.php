@@ -1,48 +1,63 @@
 <?php
+
 // Copyright (c) 2017 Institut fuer Lern-Innovation, Friedrich-Alexander-Universitaet Erlangen-Nuernberg, GPLv3, see LICENSE
 
 
 class ilTestArchiveCreatorHTML
 {
-	public ilTestArchiveCreatorPlugin $plugin;
-	public ilTestArchiveCreatorConfig $config;
+    public ilTestArchiveCreatorPlugin $plugin;
+    public ilTestArchiveCreatorConfig $config;
     public ilTestArchiveCreatorSettings $settings;
-	protected ilTestArchiveCreatorTemplate$tpl;
+    protected ilTestArchiveCreatorTemplate $tpl;
 
 
-	/**
-	 * constructor.
-	 */
-	public function __construct(
+    /**
+     * constructor.
+     */
+    public function __construct(
         ilTestArchiveCreatorPlugin $plugin,
         ilTestArchiveCreatorSettings $settings
     ) {
-		$this->plugin = $plugin;
+        $this->plugin = $plugin;
         $this->settings = $settings;
-		$this->config = $plugin->getConfig();
-		$this->initMainTemplate();
-	}
+        $this->config = $plugin->getConfig();
+        $this->initMainTemplate();
+    }
 
-	/**
-	 * Init an own version of the main ilias template with a content page template file
+    /**
+     * Init an own version of the main ilias template with a content page template file
      * It is used by the question GUI to register css and js files
-	 * This should be done always before a question or participant file is rendered
-	 */
-	public function initMainTemplate() : void
-	{
-		// we need to rewrite the main template
-		$this->tpl = new ilTestArchiveCreatorTemplate($this->plugin->getDirectory(). "/templates/tpl.content_page.html", true, true);
-		$GLOBALS['tpl'] = $this->tpl;
+     * This should be done always before a question or participant file is rendered
+     */
+    public function initMainTemplate(): void
+    {
+        // we need to rewrite the main template
+        $this->tpl = new ilTestArchiveCreatorTemplate($this->plugin->getDirectory() . "/templates/tpl.content_page.html", true, true);
+        $GLOBALS['tpl'] = $this->tpl;
+
+        // things that would normally be added by the standard global template or the test output GUI
+        iljQueryUtil::initjQuery($this->tpl);
+        ilYuiUtil::initDom($this->tpl);
+        ilYuiUtil::initConnection($this->tpl);
 
         // render all MathJax at once in buildContent at the end
         ilMathJax::getInstance()->init(ilMathJax::PURPOSE_DEFERRED_PDF);
     }
 
     /**
+     * Get the main template
+     * Replacing the main template as global variable seems not being enough in all cases
+     */
+    public function getMainTemplate(): ilGlobalTemplateInterface
+    {
+        return $this->tpl;
+    }
+
+    /**
      * Build an index page
      * This does not need the main template
      */
-    public function buildIndex(string $title = '', string $description = '', string $content = '') : string
+    public function buildIndex(string $title = '', string $description = '', string $content = ''): string
     {
         $tpl = $this->plugin->getTemplate('tpl.index_page.html');
         $tpl->setVariable('TITLE', $title);
@@ -52,17 +67,17 @@ class ilTestArchiveCreatorHTML
     }
 
 
-	/**
-	 * Build a content page
+    /**
+     * Build a content page
      * This uses a new instance of the content page template with collected css and js files from the main template
      * The function can be called twice for HTML and PDF outout after processing the content
      *
      * @see ilLMPresentationGUI::page()
-	 */
-	public function buildContent(string $title = '', string $description = '', string $content = '', bool $for_pdf = false) : string
-	{
+     */
+    public function buildContent(string $title = '', string $description = '', string $content = '', bool $for_pdf = false): string
+    {
         // allow separate building for HTML and PDF based on the same main template after content is rendered with it
-        $tpl = new ilTestArchiveCreatorTemplate($this->plugin->getDirectory(). "/templates/tpl.content_page.html", true, true);
+        $tpl = new ilTestArchiveCreatorTemplate($this->plugin->getDirectory() . "/templates/tpl.content_page.html", true, true);
         $tpl->getDataFrom($this->tpl);
 
 
@@ -76,8 +91,7 @@ class ilTestArchiveCreatorHTML
                                   ->setRendering(ilMathJax::RENDER_SVG_AS_XML_EMBED)
                                   ->includeMathJax($tpl)
                                   ->insertLatexImages($content);
-        }
-        else {
+        } else {
             $content = ilMathJax::getInstance()
                                 ->init(ilMathJax::PURPOSE_EXPORT)
                                 ->setRendering(ilMathJax::RENDER_SVG_AS_XML_EMBED)
@@ -86,8 +100,8 @@ class ilTestArchiveCreatorHTML
         }
 
         $tpl->addCss(ilUtil::getStyleSheetLocation('output', 'test_javascript.css', 'Modules/TestQuestionPool'), 'all');
-        $tpl->addCss(ilUtil::getStyleSheetLocation("output", "test_print.css", "Modules/Test"),'print');
-        $tpl->addCss(ilUtil::getStyleSheetLocation("output", "test_pdf.css", "Modules/Test"),'print');
+        $tpl->addCss(ilUtil::getStyleSheetLocation("output", "test_print.css", "Modules/Test"), 'print');
+        $tpl->addCss(ilUtil::getStyleSheetLocation("output", "test_pdf.css", "Modules/Test"), 'print');
 
         $tpl->fillContentLanguage();
         $tpl->fillCssFiles();
@@ -100,7 +114,7 @@ class ilTestArchiveCreatorHTML
         }
 
         // specific content styles, see ilPortfolioPageGUI
-//        $tpl->setVariable("LOCATION_ADDITIONAL_STYLESHEET", ilObjStyleSheet::getPlaceHolderStylePath());
+        //        $tpl->setVariable("LOCATION_ADDITIONAL_STYLESHEET", ilObjStyleSheet::getPlaceHolderStylePath());
         $tpl->setVariable("LOCATION_SYNTAX_STYLESHEET", ilObjStyleSheet::getSyntaxStylePath());
 
         // system style
@@ -109,7 +123,7 @@ class ilTestArchiveCreatorHTML
         if (!$for_pdf
             || $this->config->pdf_engine != ilTestArchiveCreatorConfig::ENGINE_PHANTOM
             || $this->plugin->getConfig()->use_system_styles) {
-            $tpl->setVariable("LOCATION_STYLESHEET",ilUtil::getStyleSheetLocation());
+            $tpl->setVariable("LOCATION_STYLESHEET", ilUtil::getStyleSheetLocation());
         }
 
         // content styles
@@ -118,10 +132,10 @@ class ilTestArchiveCreatorHTML
             ilObjStyleSheet::getContentStylePath(0),
             ilUtil::getNewContentStyleSheetLocation(),
             ilObjStyleSheet::getContentPrintStyle(),
-            './' . $this->plugin->getDirectory().'/templates/archive.css'
+            './' . $this->plugin->getDirectory() . '/templates/archive.css'
         ];
 
-        foreach ( $content_styles as $style) {
+        foreach ($content_styles as $style) {
             $tpl->setCurrentBlock('ContentStyle');
             $tpl->setVariable("LOCATION_CONTENT_STYLESHEET", $style);
             $tpl->parseCurrentBlock();
@@ -131,14 +145,14 @@ class ilTestArchiveCreatorHTML
         $tpl->setVariable('ZOOM', sprintf('style="zoom:%s;"', $this->settings->zoom_factor));
 
         // fill the body
-		if (!empty($title)) {
-			$tpl->setVariable('TITLE', $title);
-		}
-		if (!empty($description)) {
+        if (!empty($title)) {
+            $tpl->setVariable('TITLE', $title);
+        }
+        if (!empty($description)) {
             $tpl->setVariable('DESCRIPTION', $description);
-		}
-		$tpl->setVariable('CONTENT', $content);
+        }
+        $tpl->setVariable('CONTENT', $content);
 
-		return $tpl->get();
-	}
+        return $tpl->get();
+    }
 }

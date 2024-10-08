@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (c) 2017 Institut fuer Lern-Innovation, Friedrich-Alexander-Universitaet Erlangen-Nuernberg, GPLv3, see LICENSE
 use ILIAS\DI\Container;
 
@@ -11,96 +12,96 @@ use ILIAS\DI\Container;
  */
 class ilTestArchiveCreatorPlugin extends ilUserInterfaceHookPlugin
 {
-	const PASS_ALL = 'all';
-	const PASS_SCORED = 'scored';
+    public const PASS_ALL = 'all';
+    public const PASS_SCORED = 'scored';
 
-	const ORIENTATION_PORTRAIT = 'portrait';
-	const ORIENTATION_LANDSCAPE = 'landscape';
+    public const ORIENTATION_PORTRAIT = 'portrait';
+    public const ORIENTATION_LANDSCAPE = 'landscape';
 
-	const STATUS_INACTIVE = 'inactive';
-	const STATUS_PLANNED = 'planned';
-	const STATUS_FINISHED = 'finished';
-	const STATUS_RUNNING = 'running';
+    public const STATUS_INACTIVE = 'inactive';
+    public const STATUS_PLANNED = 'planned';
+    public const STATUS_FINISHED = 'finished';
+    public const STATUS_RUNNING = 'running';
 
-	const RANDOM_ALL = 'all';
-	const RANDOM_USED = 'used';
-
-
-	/** @var ilTestArchiveCreatorConfig */
-	protected $config;
+    public const RANDOM_ALL = 'all';
+    public const RANDOM_USED = 'used';
 
 
-	/** @var ilTestArchiveCreatorSettings[] */
-	protected $settings = [];
+    /** @var ilTestArchiveCreatorConfig */
+    protected $config;
 
 
-    public function init() : void
+    /** @var ilTestArchiveCreatorSettings[] */
+    protected $settings = [];
+
+
+    public function init(): void
     {
         parent::init();
         require_once __DIR__ . '/../vendor/autoload.php';
     }
 
     /**
-	 * Get the plugin name
-	 * @return string
-	 */
-	public function getPluginName() : string
-	{
-		return "TestArchiveCreator";
-	}
+     * Get the plugin name
+     * @return string
+     */
+    public function getPluginName(): string
+    {
+        return "TestArchiveCreator";
+    }
 
-	/**
-	 * Get the global configuration
-	 */
-	public function getConfig() : ilTestArchiveCreatorConfig
-	{
-		if (!isset($this->config)) {
-			$this->config = new ilTestArchiveCreatorConfig($this);
-		}
-		return $this->config;
-	}
+    /**
+     * Get the global configuration
+     */
+    public function getConfig(): ilTestArchiveCreatorConfig
+    {
+        if (!isset($this->config)) {
+            $this->config = new ilTestArchiveCreatorConfig($this);
+        }
+        return $this->config;
+    }
 
 
-	/**
-	 * Get the settings for a test object
-	 */
-	public function getSettings(int $obj_id) : ilTestArchiveCreatorSettings
-	{
-		if (!isset($this->settings[$obj_id])) {
-			$this->settings[$obj_id] = new ilTestArchiveCreatorSettings($this, $obj_id);
-		}
-		return $this->settings[$obj_id];
-	}
+    /**
+     * Get the settings for a test object
+     */
+    public function getSettings(int $obj_id): ilTestArchiveCreatorSettings
+    {
+        if (!isset($this->settings[$obj_id])) {
+            $this->settings[$obj_id] = new ilTestArchiveCreatorSettings($this, $obj_id);
+        }
+        return $this->settings[$obj_id];
+    }
 
     /**
      * Get the working directory as relative path in the storage file system
      */
-    public function getWorkdir(int $obj_id) : string
+    public function getWorkdir(int $obj_id): string
     {
-        return 'tst_data/archive_plugin/tst_'. $obj_id;
+        return 'tst_data/archive_plugin/tst_' . $obj_id;
     }
 
     /**
      * Get the url for loading assets
      */
-    public function getAssetsUrl(int $obj_id) : string
+    public function getAssetsUrl(int $obj_id): string
     {
         return ILIAS_HTTP_PATH . '/' . $this->getDirectory() . '/assets.php/' . $obj_id;
     }
 
 
-	/**
-	 * Get the archive creator
-	 */
-	public function getArchiveCreator(int $obj_id) : ilTestArchiveCreator
-	{
-		return new ilTestArchiveCreator($this, $obj_id);
-	}
+    /**
+     * Get the archive creator
+     */
+    public function getArchiveCreator(int $obj_id): ilTestArchiveCreator
+    {
+        return new ilTestArchiveCreator($this, $obj_id);
+    }
 
     /**
      * Check if the test and assessment log is active
      */
-    public function isTestLogActive() : bool
+    public function isTestLogActive(): bool
     {
         return ilObjAssessmentFolder::_enabledAssessmentLogging();
     }
@@ -113,10 +114,10 @@ class ilTestArchiveCreatorPlugin extends ilUserInterfaceHookPlugin
         return !empty($this->getActivePluginBySlotAndName('uihk', 'ExaminationProtocol'));
     }
 
-	/**
+    /**
      * Check if the player plugin is active
      */
-	public function isCronPluginActive() : bool
+    public function isCronPluginActive(): bool
     {
         return !empty($this->getActivePluginBySlotAndName('crnhk', 'TestArchiveCron'));
     }
@@ -124,7 +125,7 @@ class ilTestArchiveCreatorPlugin extends ilUserInterfaceHookPlugin
     /**
      * Get the examination protocol plugin object
      */
-    public function getExaminationProtocolPlugin() : ?ilPlugin
+    public function getExaminationProtocolPlugin(): ?ilPlugin
     {
         return $this->getActivePluginBySlotAndName('uihk', 'ExaminationProtocol');
     }
@@ -132,7 +133,7 @@ class ilTestArchiveCreatorPlugin extends ilUserInterfaceHookPlugin
     /**
      * Get an active plugin by slot id and plugin name
      */
-    public function getActivePluginBySlotAndName(string $slot_id, string $plugin_name) : ?ilPlugin
+    public function getActivePluginBySlotAndName(string $slot_id, string $plugin_name): ?ilPlugin
     {
         /** @var \ILIAS\DI\Container $DIC */
         global $DIC;
@@ -142,13 +143,12 @@ class ilTestArchiveCreatorPlugin extends ilUserInterfaceHookPlugin
             $factory = $DIC["component.factory"];
 
             /** @var ilPlugin $plugin */
-            Foreach ($factory->getActivePluginsInSlot($slot_id) as $plugin) {
+            foreach ($factory->getActivePluginsInSlot($slot_id) as $plugin) {
                 if ($plugin->getPluginName() == $plugin_name) {
                     return $plugin;
                 }
             }
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
 
@@ -156,18 +156,17 @@ class ilTestArchiveCreatorPlugin extends ilUserInterfaceHookPlugin
     }
 
     /**
-	 * Handle a call by the cron job plugin
-	 * @return	int		Number of created archives
-	 * @throws	Exception
-	 */
-    public function handleCronJob() : int
-	{
+     * Handle a call by the cron job plugin
+     * @return	int		Number of created archives
+     * @throws	Exception
+     */
+    public function handleCronJob(): int
+    {
         global $DIC;
 
         // manual cron job execution in the admin gui
-        if (ilContext::usesHTTP())
-        {
-           // save the current controller parameters to be restored afterwards
+        if (ilContext::usesHTTP()) {
+            // save the current controller parameters to be restored afterwards
             $params = $DIC->http()->request()->getQueryParams();
             $ref_id = $params['ref_id'];
             $base_class = $params['baseClass'];
@@ -178,8 +177,7 @@ class ilTestArchiveCreatorPlugin extends ilUserInterfaceHookPlugin
         $this->initCtrl($DIC, 'ilUIPluginRouterGUI', 'ilTestArchiveCreatorSettingsGUI');
 
         $created = 0;
-        foreach (ilTestArchiveCreatorSettings::getScheduledObjects() as $obj_id)
-        {
+        foreach (ilTestArchiveCreatorSettings::getScheduledObjects() as $obj_id) {
             $creator = new ilTestArchiveCreator($this, $obj_id);
             if ($creator->createArchive()) {
                 $creator->settings->status = self::STATUS_FINISHED;
@@ -190,8 +188,7 @@ class ilTestArchiveCreatorPlugin extends ilUserInterfaceHookPlugin
         }
 
         // manual cron job execution in the admin gui
-        if (ilContext::usesHTTP())
-        {
+        if (ilContext::usesHTTP()) {
             // restore the former controller status
             // this allows a proper redirection after the return from the job run
             $this->initCtrl($DIC, $base_class, $cmd_class);
@@ -200,7 +197,7 @@ class ilTestArchiveCreatorPlugin extends ilUserInterfaceHookPlugin
 
 
         return $created;
-	}
+    }
 
     /**
      * Initialize the controller to get working base and command classes for the question page GUI
@@ -269,63 +266,61 @@ class ilTestArchiveCreatorPlugin extends ilUserInterfaceHookPlugin
 
 
     /**
-	 * Build the exam id and allow ids without active_id and pass
-	 */
-	public function buildExamId(ilObjTest $testObj, ?int $active_id = null, ?int $pass = null) : string
-	{
-		global $DIC;
-		/** @var ilSetting $ilPluginAdmin */
-		$ilSetting = $DIC['ilSetting'];
+     * Build the exam id and allow ids without active_id and pass
+     */
+    public function buildExamId(ilObjTest $testObj, ?int $active_id = null, ?int $pass = null): string
+    {
+        global $DIC;
+        /** @var ilSetting $ilPluginAdmin */
+        $ilSetting = $DIC['ilSetting'];
 
 
-		$inst_id = $ilSetting->get( 'inst_id', null );
-		$obj_id = $testObj->getId();
+        $inst_id = $ilSetting->get('inst_id', null);
+        $obj_id = $testObj->getId();
 
-		$examId = 'I' . $inst_id . '_T' . $obj_id;
+        $examId = 'I' . $inst_id . '_T' . $obj_id;
 
-		if (isset($active_id))
-		{
-			$examId .=  '_A' . $active_id;
-		}
+        if (isset($active_id)) {
+            $examId .= '_A' . $active_id;
+        }
 
-		if (isset($pass))
-		{
-			$examId .= '_P' . $pass;
-		}
+        if (isset($pass)) {
+            $examId .= '_P' . $pass;
+        }
 
-		return $examId;
-	}
+        return $examId;
+    }
 
-	/**
-	 * Build a full question id like the exam id
-	 * @param ilObjTest $testObj
-	 * @param $question_id
-	 * @return string
-	 */
-	public function buildExamQuestionId($testObj, $question_id) : string
-	{
-		return $this->buildExamId($testObj). '_Q' . $question_id;
-	}
+    /**
+     * Build a full question id like the exam id
+     * @param ilObjTest $testObj
+     * @param $question_id
+     * @return string
+     */
+    public function buildExamQuestionId($testObj, $question_id): string
+    {
+        return $this->buildExamId($testObj) . '_Q' . $question_id;
+    }
 
-	/**
-	 * Cleanup when uninstalling
-	 */
-	public function beforeUninstall() : bool
-	{
-		global $DIC;
-		$ilDB = $DIC->database();
-		$ilDB->dropTable('tarc_ui_settings');
+    /**
+     * Cleanup when uninstalling
+     */
+    public function beforeUninstall(): bool
+    {
+        global $DIC;
+        $ilDB = $DIC->database();
+        $ilDB->dropTable('tarc_ui_settings');
 
-		return parent::beforeUninstall();
-	}
+        return parent::beforeUninstall();
+    }
 
 
-	/**
-	 * Check if the user has administrative access
-	 */
-	public function hasAdminAccess() : bool
-	{
-		global $rbacsystem;
-		return $rbacsystem->checkAccess("visible", SYSTEM_FOLDER_ID);
-	}
+    /**
+     * Check if the user has administrative access
+     */
+    public function hasAdminAccess(): bool
+    {
+        global $rbacsystem;
+        return $rbacsystem->checkAccess("visible", SYSTEM_FOLDER_ID);
+    }
 }

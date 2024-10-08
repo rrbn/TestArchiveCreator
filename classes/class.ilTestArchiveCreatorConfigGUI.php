@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (c) 2017 Institut fuer Lern-Innovation, Friedrich-Alexander-Universitaet Erlangen-Nuernberg, GPLv3, see LICENSE
 
 
@@ -12,88 +13,85 @@
  */
 class ilTestArchiveCreatorConfigGUI extends ilPluginConfigGUI
 {
-
-	protected ilAccessHandler $access;
-	protected ilCtrl $ctrl;
-	protected ilLanguage $lng;
-	protected ilTabsGUI $tabs;
-	protected ilToolbarGUI $toolbar;
-	protected ilGlobalTemplateInterface $tpl;
+    protected ilAccessHandler $access;
+    protected ilCtrl $ctrl;
+    protected ilLanguage $lng;
+    protected ilTabsGUI $tabs;
+    protected ilToolbarGUI $toolbar;
+    protected ilGlobalTemplateInterface $tpl;
     /** @var ilTestArchiveCreatorPlugin */
-	protected ilPlugin $plugin;
-	protected ilTestArchiveCreatorConfig $config;
+    protected ilPlugin $plugin;
+    protected ilTestArchiveCreatorConfig $config;
 
-	/**
-	 * Constructor.
-	 */
-	public function __construct()
-	{
-		global $DIC;
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        global $DIC;
 
-		$this->access = $DIC->access();
-		$this->ctrl = $DIC->ctrl();
-		$this->lng = $DIC->language();
-		$this->tabs = $DIC->tabs();
-		$this->toolbar = $DIC->toolbar();
-		$this->tpl = $DIC->ui()->mainTemplate();
+        $this->access = $DIC->access();
+        $this->ctrl = $DIC->ctrl();
+        $this->lng = $DIC->language();
+        $this->tabs = $DIC->tabs();
+        $this->toolbar = $DIC->toolbar();
+        $this->tpl = $DIC->ui()->mainTemplate();
 
-		$this->lng->loadLanguageModule('assessment');
-	}
+        $this->lng->loadLanguageModule('assessment');
+    }
 
 
-	/**
-	 * Handles all commands, default is "configure"
-	 */
-	public function performCommand(string $cmd) : void
-	{
-		$this->plugin = $this->getPluginObject();
-		$this->config = $this->plugin->getConfig();
+    /**
+     * Handles all commands, default is "configure"
+     */
+    public function performCommand(string $cmd): void
+    {
+        $this->plugin = $this->getPluginObject();
+        $this->config = $this->plugin->getConfig();
 
-		switch ($cmd)
-		{
-			case "saveConfiguration":
-				$this->saveConfiguration();
-				break;
+        switch ($cmd) {
+            case "saveConfiguration":
+                $this->saveConfiguration();
+                break;
 
-			case "configure":
-			default:
-				$this->editConfiguration();
-				break;
-		}
-	}
+            case "configure":
+            default:
+                $this->editConfiguration();
+                break;
+        }
+    }
 
-	/**
-	 * Edit the configuration
-	 */
-	protected function editConfiguration() :void
-	{
-		$form = $this->initConfigForm();
-		$this->tpl->setContent($form->getHTML());
-	}
+    /**
+     * Edit the configuration
+     */
+    protected function editConfiguration(): void
+    {
+        $form = $this->initConfigForm();
+        $this->tpl->setContent($form->getHTML());
+    }
 
-	/**
-	 * Save the edited configuration
-	 */
-	protected function saveConfiguration() : void
-	{
-		$form = $this->initConfigForm();
-		if (!$form->checkInput())
-		{
-			$form->setValuesByPost();
-			$this->tpl->setContent($form->getHTML());
-			return;
-		}
+    /**
+     * Save the edited configuration
+     */
+    protected function saveConfiguration(): void
+    {
+        $form = $this->initConfigForm();
+        if (!$form->checkInput()) {
+            $form->setValuesByPost();
+            $this->tpl->setContent($form->getHTML());
+            return;
+        }
 
         $this->config->pdf_engine = $form->getInput('pdf_engine');
         $this->config->embed_assets = $form->getInput('embed_assets');
 
-		$this->config->phantomjs_path = $form->getInput('phantomjs_path');
-		$this->config->hide_standard_archive = $form->getInput('hide_standard_archive');
+        $this->config->phantomjs_path = $form->getInput('phantomjs_path');
+        $this->config->hide_standard_archive = $form->getInput('hide_standard_archive');
         $this->config->keep_creation_directory = $form->getInput('keep_creation_directory');
         $this->config->keep_jobfile = $form->getInput('keep_jobfile');
-		$this->config->use_system_styles = $form->getInput('use_system_styles');
-		$this->config->any_ssl_protocol = $form->getInput('any_ssl_protocol');
-		$this->config->ignore_ssl_errors = $form->getInput('ignore_ssl_errors');
+        $this->config->use_system_styles = $form->getInput('use_system_styles');
+        $this->config->any_ssl_protocol = $form->getInput('any_ssl_protocol');
+        $this->config->ignore_ssl_errors = $form->getInput('ignore_ssl_errors');
         $this->config->render_twice = $form->getInput('render_twice');
 
         $this->config->bs_node_module_path = $form->getInput('bs_node_module_path');
@@ -104,7 +102,7 @@ class ilTestArchiveCreatorConfigGUI extends ilPluginConfigGUI
         $this->config->server_url = $form->getInput('server_url');
 
         $this->config->with_login = $form->getInput('with_login');
-		$this->config->with_matriculation = $form->getInput('with_matriculation');
+        $this->config->with_matriculation = $form->getInput('with_matriculation');
         if ($this->plugin->isTestLogActive()) {
             $this->config->include_test_log = $form->getInput('include_test_log');
         }
@@ -117,10 +115,10 @@ class ilTestArchiveCreatorConfigGUI extends ilPluginConfigGUI
         $this->config->questions_with_best_solution = $form->getInput('questions_with_best_solution');
         $this->config->answers_with_best_solution = $form->getInput('answers_with_best_solution');
 
-		$this->config->pass_selection = $form->getInput('pass_selection');
+        $this->config->pass_selection = $form->getInput('pass_selection');
         $this->config->random_questions = $form->getInput('random_questions');
 
-		$this->config->zoom_factor = $form->getInput('zoom_factor') / 100;
+        $this->config->zoom_factor = $form->getInput('zoom_factor') / 100;
         $this->config->orientation = $form->getInput('orientation');
 
         $this->config->min_rendering_wait = $form->getInput('min_rendering_wait');
@@ -131,28 +129,28 @@ class ilTestArchiveCreatorConfigGUI extends ilPluginConfigGUI
         $this->config->save();
 
         $this->tpl->setOnScreenMessage('success', $this->lng->txt("settings_saved"), true);
-		$this->ctrl->redirect($this, 'editConfiguration');
-	}
+        $this->ctrl->redirect($this, 'editConfiguration');
+    }
 
-	/**
-	 * Fill the configuration form
-	 */
-	protected function initConfigForm() : ilPropertyFormGUI
-	{
-		$form = new ilPropertyFormGUI();
-		$form->setFormAction($this->ctrl->getFormAction($this, 'editConfiguration'));
-		$form->setTitle($this->plugin->txt('plugin_configuration'));
+    /**
+     * Fill the configuration form
+     */
+    protected function initConfigForm(): ilPropertyFormGUI
+    {
+        $form = new ilPropertyFormGUI();
+        $form->setFormAction($this->ctrl->getFormAction($this, 'editConfiguration'));
+        $form->setTitle($this->plugin->txt('plugin_configuration'));
 
 
         $hide = new ilCheckboxInputGUI($this->plugin->txt('hide_standard_archive'), 'hide_standard_archive');
-		$hide->setInfo($this->plugin->txt('hide_standard_archive_info'));
-		$hide->setChecked($this->config->hide_standard_archive);
-		$form->addItem($hide);
+        $hide->setInfo($this->plugin->txt('hide_standard_archive_info'));
+        $hide->setChecked($this->config->hide_standard_archive);
+        $form->addItem($hide);
 
-		$keep = new ilCheckboxInputGUI($this->plugin->txt('keep_creation_directory'), 'keep_creation_directory');
-		$keep->setInfo($this->plugin->txt('keep_creation_directory_info'));
-		$keep->setChecked($this->config->keep_creation_directory);
-		$form->addItem($keep);
+        $keep = new ilCheckboxInputGUI($this->plugin->txt('keep_creation_directory'), 'keep_creation_directory');
+        $keep->setInfo($this->plugin->txt('keep_creation_directory_info'));
+        $keep->setChecked($this->config->keep_creation_directory);
+        $form->addItem($keep);
 
         $job = new ilCheckboxInputGUI($this->plugin->txt('keep_jobfile'), 'keep_jobfile');
         $job->setInfo($this->plugin->txt('keep_jobfile_info'));
@@ -269,13 +267,13 @@ class ilTestArchiveCreatorConfigGUI extends ilPluginConfigGUI
         $questions->setChecked($this->config->include_questions);
         $form->addItem($questions);
 
-            $random_questions = new ilSelectInputGUI($this->plugin->txt('random_questions'), 'random_questions');
-            $random_questions->setOptions(array(
-                ilTestArchiveCreatorPlugin::RANDOM_ALL => $this->plugin->txt('random_questions_all'),
-                ilTestArchiveCreatorPlugin::RANDOM_USED => $this->plugin->txt('random_questions_used'),
-            ));
-            $random_questions->setValue($this->config->random_questions);
-            $questions->addSubItem($random_questions);
+        $random_questions = new ilSelectInputGUI($this->plugin->txt('random_questions'), 'random_questions');
+        $random_questions->setOptions(array(
+            ilTestArchiveCreatorPlugin::RANDOM_ALL => $this->plugin->txt('random_questions_all'),
+            ilTestArchiveCreatorPlugin::RANDOM_USED => $this->plugin->txt('random_questions_used'),
+        ));
+        $random_questions->setValue($this->config->random_questions);
+        $questions->addSubItem($random_questions);
 
         $qbest = new ilCheckboxInputGUI($this->plugin->txt('questions_with_best_solution'), 'questions_with_best_solution');
         $qbest->setInfo($this->plugin->txt('questions_with_best_solution_info'));
@@ -288,18 +286,18 @@ class ilTestArchiveCreatorConfigGUI extends ilPluginConfigGUI
         $answers->setChecked($this->config->include_answers);
         $form->addItem($answers);
 
-            $pass_selection = new ilSelectInputGUI($this->plugin->txt('pass_selection'), 'pass_selection');
-            $pass_selection->setOptions(array(
-                ilTestArchiveCreatorPlugin::PASS_SCORED => $this->plugin->txt('pass_scored'),
-                ilTestArchiveCreatorPlugin::PASS_ALL => $this->plugin->txt('pass_all'),
-            ));
-            $pass_selection->setValue($this->config->pass_selection);
-            $answers->addSubItem($pass_selection);
+        $pass_selection = new ilSelectInputGUI($this->plugin->txt('pass_selection'), 'pass_selection');
+        $pass_selection->setOptions(array(
+            ilTestArchiveCreatorPlugin::PASS_SCORED => $this->plugin->txt('pass_scored'),
+            ilTestArchiveCreatorPlugin::PASS_ALL => $this->plugin->txt('pass_all'),
+        ));
+        $pass_selection->setValue($this->config->pass_selection);
+        $answers->addSubItem($pass_selection);
 
-            $abest = new ilCheckboxInputGUI($this->plugin->txt('answers_with_best_solution'), 'answers_with_best_solution');
-            $abest->setInfo($this->plugin->txt('answers_with_best_solution_info'));
-            $abest->setChecked($this->config->answers_with_best_solution);
-            $answers->addSubItem($abest);
+        $abest = new ilCheckboxInputGUI($this->plugin->txt('answers_with_best_solution'), 'answers_with_best_solution');
+        $abest->setInfo($this->plugin->txt('answers_with_best_solution_info'));
+        $abest->setChecked($this->config->answers_with_best_solution);
+        $answers->addSubItem($abest);
 
 
         $orientation = new ilSelectInputGUI($this->plugin->txt('orientation'), 'orientation');
@@ -319,18 +317,18 @@ class ilTestArchiveCreatorConfigGUI extends ilPluginConfigGUI
         // Privacy settings
 
         $header = new ilFormSectionHeaderGUI();
-		$header->setTitle($this->plugin->txt('privacy_settings'));
-		$form->addItem($header);
+        $header->setTitle($this->plugin->txt('privacy_settings'));
+        $form->addItem($header);
 
-		$with_login = new ilCheckboxInputGUI($this->plugin->txt('with_login'), 'with_login');
-		$with_login->setInfo($this->plugin->txt('with_login_info'));
-		$with_login->setChecked($this->config->with_login);
-		$form->addItem($with_login);
+        $with_login = new ilCheckboxInputGUI($this->plugin->txt('with_login'), 'with_login');
+        $with_login->setInfo($this->plugin->txt('with_login_info'));
+        $with_login->setChecked($this->config->with_login);
+        $form->addItem($with_login);
 
-		$with_matriculation = new ilCheckboxInputGUI($this->plugin->txt('with_matriculation'), 'with_matriculation');
-		$with_matriculation->setInfo($this->plugin->txt('with_matriculation_info'));
-		$with_matriculation->setChecked($this->config->with_matriculation);
-		$form->addItem($with_matriculation);
+        $with_matriculation = new ilCheckboxInputGUI($this->plugin->txt('with_matriculation'), 'with_matriculation');
+        $with_matriculation->setInfo($this->plugin->txt('with_matriculation_info'));
+        $with_matriculation->setChecked($this->config->with_matriculation);
+        $form->addItem($with_matriculation);
 
         $include_test_log = new ilCheckboxInputGUI($this->plugin->txt('include_test_log'), 'include_test_log');
         $include_test_log->setInfo($this->plugin->txt('include_test_log_info'));
@@ -345,25 +343,25 @@ class ilTestArchiveCreatorConfigGUI extends ilPluginConfigGUI
         $form->addItem($include_examination_protocol);
 
         $header = new ilFormSectionHeaderGUI();
-		$header->setTitle($this->plugin->txt('permissions'));
-		$header->setInfo($this->plugin->txt('permissions_info'));
-		$form->addItem($header);
+        $header->setTitle($this->plugin->txt('permissions'));
+        $header->setInfo($this->plugin->txt('permissions_info'));
+        $form->addItem($header);
 
-		$access = new ilRadioGroupInputGUI($this->plugin->txt('allow'), 'user_allow');
-		$option = new ilRadioOption($this->plugin->txt('allow_any'), ilTestArchiveCreatorConfig::ALLOW_ANY);
-		$option->setInfo($this->plugin->txt('allow_any_info'));
-		$access->addOption($option);
-		$option = new ilRadioOption($this->plugin->txt('allow_planned'), ilTestArchiveCreatorConfig::ALLOW_PLANNED);
-		$option->setInfo($this->plugin->txt('allow_planned_info'));
-		$access->addOption($option);
-		$option = new ilRadioOption($this->plugin->txt('allow_none'), ilTestArchiveCreatorConfig::ALLOW_NONE);
-		$option->setInfo($this->plugin->txt('allow_none_info'));
-		$access->addOption($option);
-		$access->setValue($this->config->user_allow);
-		$form->addItem($access);
+        $access = new ilRadioGroupInputGUI($this->plugin->txt('allow'), 'user_allow');
+        $option = new ilRadioOption($this->plugin->txt('allow_any'), ilTestArchiveCreatorConfig::ALLOW_ANY);
+        $option->setInfo($this->plugin->txt('allow_any_info'));
+        $access->addOption($option);
+        $option = new ilRadioOption($this->plugin->txt('allow_planned'), ilTestArchiveCreatorConfig::ALLOW_PLANNED);
+        $option->setInfo($this->plugin->txt('allow_planned_info'));
+        $access->addOption($option);
+        $option = new ilRadioOption($this->plugin->txt('allow_none'), ilTestArchiveCreatorConfig::ALLOW_NONE);
+        $option->setInfo($this->plugin->txt('allow_none_info'));
+        $access->addOption($option);
+        $access->setValue($this->config->user_allow);
+        $form->addItem($access);
 
-		$form->addCommandButton('saveConfiguration', $this->lng->txt('save'));
+        $form->addCommandButton('saveConfiguration', $this->lng->txt('save'));
 
-		return $form;
-	}
+        return $form;
+    }
 }

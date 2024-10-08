@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (c) 2017 Institut fuer Lern-Innovation, Friedrich-Alexander-Universitaet Erlangen-Nuernberg, GPLv3, see LICENSE
 
 /**
@@ -12,221 +13,215 @@
  */
 class ilTestArchiveCreatorSettingsGUI
 {
-	protected ilAccessHandler $access;
-	protected ilCtrl $ctrl;
-	protected ilLanguage $lng;
-	protected ilTabsGUI $tabs;
-	protected ilToolbarGUI $toolbar;
-	protected ilGlobalTemplateInterface $tpl;
-	protected ilPlugin $plugin;
-	protected ilTestArchiveCreatorConfig $config;
-	protected ilTestArchiveCreatorSettings $settings;
-	protected ilObjTest $testObj;
+    protected ilAccessHandler $access;
+    protected ilCtrl $ctrl;
+    protected ilLanguage $lng;
+    protected ilTabsGUI $tabs;
+    protected ilToolbarGUI $toolbar;
+    protected ilGlobalTemplateInterface $tpl;
+    protected ilPlugin $plugin;
+    protected ilTestArchiveCreatorConfig $config;
+    protected ilTestArchiveCreatorSettings $settings;
+    protected ilObjTest $testObj;
 
-	/**
-	 * Constructor.
-	 */
-	public function __construct()
-	{
-		global $DIC;
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        global $DIC;
 
-		$this->access = $DIC->access();
-		$this->ctrl = $DIC->ctrl();
-		$this->lng = $DIC->language();
-		$this->tabs = $DIC->tabs();
-		$this->toolbar = $DIC->toolbar();
-		$this->tpl = $DIC['tpl'];
+        $this->access = $DIC->access();
+        $this->ctrl = $DIC->ctrl();
+        $this->lng = $DIC->language();
+        $this->tabs = $DIC->tabs();
+        $this->toolbar = $DIC->toolbar();
+        $this->tpl = $DIC['tpl'];
 
-		$this->lng->loadLanguageModule('assessment');
+        $this->lng->loadLanguageModule('assessment');
 
-		$this->testObj = new ilObjTest($_GET['ref_id'], true);
+        $this->testObj = new ilObjTest($_GET['ref_id'], true);
 
         /** @var ilComponentFactory $factory */
         $factory = $DIC["component.factory"];
         $this->plugin = $factory->getPlugin('tarc_ui');
-		$this->config = $this->plugin->getConfig();
-		$this->settings = $this->plugin->getSettings($this->testObj->getId());
+        $this->config = $this->plugin->getConfig();
+        $this->settings = $this->plugin->getSettings($this->testObj->getId());
     }
 
 
     /**
-	 * Modify the export tab toolbar
-	 */
-	public function modifyExportToolbar()
-	{
+     * Modify the export tab toolbar
+     */
+    public function modifyExportToolbar()
+    {
 
-		if (empty($this->toolbar->getItems()))
-		{
-			// e.g delete confirmation is shown
-			return;
-		}
-		$this->toolbar->addSeparator();
-
-
-		// hide the standard archive (not nice)
-		if ($this->config->hide_standard_archive) {
-			foreach ($this->toolbar->getItems() as $item) {
-				/** @var ilSelectInputGUI $select */
-				if (isset($item['input']) && $item['input'] instanceof ilSelectInputGUI) {
-					$select = $item['input'];
-					if ($select->getPostVar() == 'format') {
-						$options = $select->getOptions();
-						unset($options['arc']);
-						$select->setOptions($options);
-					}
-				}
-			}
-		}
-
-		// set the return target
-		$this->ctrl->saveParameter($this, 'ref_id');
-
-		$text = $this->plugin->txt('tb_archive_label'). ' ';
-		if ($this->plugin->isCronPluginActive())
-		{
-			switch ($this->settings->status) {
-				case ilTestArchiveCreatorPlugin::STATUS_PLANNED:
-					$text .= sprintf($this->plugin->txt('tb_archive_planned'), isset($this->settings->schedule) ? ilDatePresentation::formatDate($this->settings->schedule) : '');
-					break;
-				case ilTestArchiveCreatorPlugin::STATUS_FINISHED:
-					$text .= $this->plugin->txt('tb_archive_finished');
-					break;
-				case ilTestArchiveCreatorPlugin::STATUS_INACTIVE:
-				default:
-					$text .= $this->plugin->txt('tb_archive_inactive');
-					break;
-			}
-		}
-		else
-		{
-			$text .= $this->plugin->txt('tb_archive_manual');
-		}
-		$this->toolbar->addText($text);
-
-		if ($this->config->isPlannedCreationAllowed()) {
-			$button = ilLinkButton::getInstance();
-			$button->setCaption($this->lng->txt('settings'), false);
-			$button->setUrl($this->getLinkTarget('editSettings'));
-			$this->toolbar->addButtonInstance($button);
-		}
-
-		if ($this->config->isInstantCreationAllowed()) {
-			$button = ilLinkButton::getInstance();
-			$button->setCaption($this->lng->txt('create'), false);
-			$button->setUrl($this->getLinkTarget('createArchive'));
-			$this->toolbar->addButtonInstance($button);
-		}
-	}
+        if (empty($this->toolbar->getItems())) {
+            // e.g delete confirmation is shown
+            return;
+        }
+        $this->toolbar->addSeparator();
 
 
-	/**
-	* Handles all commands, default is "show"
-	*/
-	public function executeCommand()
-	{
+        // hide the standard archive (not nice)
+        if ($this->config->hide_standard_archive) {
+            foreach ($this->toolbar->getItems() as $item) {
+                /** @var ilSelectInputGUI $select */
+                if (isset($item['input']) && $item['input'] instanceof ilSelectInputGUI) {
+                    $select = $item['input'];
+                    if ($select->getPostVar() == 'format') {
+                        $options = $select->getOptions();
+                        unset($options['arc']);
+                        $select->setOptions($options);
+                    }
+                }
+            }
+        }
 
-		if (!$this->access->checkAccess('write','',$this->testObj->getRefId()))
-		{
-            $this->tpl->setOnScreenMessage('failure', $this->lng->txt("permission_denied"), true);
-            ilUtil::redirect("goto.php?target=tst_".$this->testObj->getRefId());
-		}
+        // set the return target
+        $this->ctrl->saveParameter($this, 'ref_id');
 
-		if (!$this->config->isPlannedCreationAllowed()) {
-            $this->tpl->setOnScreenMessage('failure', $this->lng->txt("permission_denied"), true);
-			$this->ctrl->redirectToURL("goto.php?target=tst_".$this->testObj->getRefId());
-		}
+        $text = $this->plugin->txt('tb_archive_label') . ' ';
+        if ($this->plugin->isCronPluginActive()) {
+            switch ($this->settings->status) {
+                case ilTestArchiveCreatorPlugin::STATUS_PLANNED:
+                    $text .= sprintf($this->plugin->txt('tb_archive_planned'), isset($this->settings->schedule) ? ilDatePresentation::formatDate($this->settings->schedule) : '');
+                    break;
+                case ilTestArchiveCreatorPlugin::STATUS_FINISHED:
+                    $text .= $this->plugin->txt('tb_archive_finished');
+                    break;
+                case ilTestArchiveCreatorPlugin::STATUS_INACTIVE:
+                default:
+                    $text .= $this->plugin->txt('tb_archive_inactive');
+                    break;
+            }
+        } else {
+            $text .= $this->plugin->txt('tb_archive_manual');
+        }
+        $this->toolbar->addText($text);
 
-		$this->ctrl->saveParameter($this, 'ref_id');
+        if ($this->config->isPlannedCreationAllowed()) {
+            $button = ilLinkButton::getInstance();
+            $button->setCaption($this->lng->txt('settings'), false);
+            $button->setUrl($this->getLinkTarget('editSettings'));
+            $this->toolbar->addButtonInstance($button);
+        }
 
-		$cmd = $this->ctrl->getCmd('editSettings');
-
-		switch ($cmd)
-		{
-			case "editSettings":
-				$this->prepareOutput();
-				$this->$cmd();
-                break;
-			case "saveSettings":
-			case "cancelSettings":
-				$this->$cmd();
-				break;
-            case "createArchive":
-				if (!$this->config->isInstantCreationAllowed()) {
-                    $this->tpl->setOnScreenMessage('failure', $this->lng->txt("permission_denied"), true);
-					$this->ctrl->redirectToURL("goto.php?target=tst_".$this->testObj->getRefId());
-				}
-				$this->$cmd();
-				break;
-
-			default:
-                $this->tpl->setOnScreenMessage('failure', $this->lng->txt("permission_denied"), true);
-                $this->ctrl->redirectToURL("goto.php?target=tst_".$this->testObj->getRefId());
-				break;
-		}
-	}
+        if ($this->config->isInstantCreationAllowed()) {
+            $button = ilLinkButton::getInstance();
+            $button->setCaption($this->lng->txt('create'), false);
+            $button->setUrl($this->getLinkTarget('createArchive'));
+            $this->toolbar->addButtonInstance($button);
+        }
+    }
 
 
     /**
-	 * Prepare the test header, tabs etc.
-	 */
-	protected function prepareOutput()
-	{
-		/** @var ilLocatorGUI $ilLocator */
-		/** @var ilLanguage $lng */
-		global $ilLocator, $lng;
+    * Handles all commands, default is "show"
+    */
+    public function executeCommand()
+    {
 
-		$this->ctrl->setParameterByClass('ilObjTestGUI', 'ref_id',  $this->testObj->getRefId());
-		$ilLocator->addRepositoryItems($this->testObj->getRefId());
-		$ilLocator->addItem($this->testObj->getTitle(),$this->ctrl->getLinkTargetByClass('ilObjTestGUI'));
+        if (!$this->access->checkAccess('write', '', $this->testObj->getRefId())) {
+            $this->tpl->setOnScreenMessage('failure', $this->lng->txt("permission_denied"), true);
+            ilUtil::redirect("goto.php?target=tst_" . $this->testObj->getRefId());
+        }
 
-		// $this->tpl->getStandardTemplate();
-		//https://github.com/ILIAS-eLearning/ILIAS/commit/0c199948c24dc454f36d6dc3fca3765dfa39e5a4
-		$this->tpl->loadStandardTemplate();
+        if (!$this->config->isPlannedCreationAllowed()) {
+            $this->tpl->setOnScreenMessage('failure', $this->lng->txt("permission_denied"), true);
+            $this->ctrl->redirectToURL("goto.php?target=tst_" . $this->testObj->getRefId());
+        }
 
-		$this->tpl->setLocator();
-		$this->tpl->setTitle($this->testObj->getPresentationTitle());
-		$this->tpl->setDescription($this->testObj->getLongDescription());
-		$this->tpl->setTitleIcon(ilObject::_getIcon(0, 'big', 'tst'), $lng->txt('obj_tst'));
+        $this->ctrl->saveParameter($this, 'ref_id');
 
-		return true;
-	}
+        $cmd = $this->ctrl->getCmd('editSettings');
 
-	/**
-	 * Init the settings form
-	 */
-	protected function initSettingsForm()
-	{
-		$form = new ilPropertyFormGUI();
-		$form->setFormAction($this->ctrl->getFormAction($this, 'editSettings'));
-		$form->setTitle($this->plugin->txt('edit_archive_settings'));
+        switch ($cmd) {
+            case "editSettings":
+                $this->prepareOutput();
+                $this->$cmd();
+                break;
+            case "saveSettings":
+            case "cancelSettings":
+                $this->$cmd();
+                break;
+            case "createArchive":
+                if (!$this->config->isInstantCreationAllowed()) {
+                    $this->tpl->setOnScreenMessage('failure', $this->lng->txt("permission_denied"), true);
+                    $this->ctrl->redirectToURL("goto.php?target=tst_" . $this->testObj->getRefId());
+                }
+                $this->$cmd();
+                break;
+
+            default:
+                $this->tpl->setOnScreenMessage('failure', $this->lng->txt("permission_denied"), true);
+                $this->ctrl->redirectToURL("goto.php?target=tst_" . $this->testObj->getRefId());
+                break;
+        }
+    }
 
 
-		$st_inactive = new ilRadioOption($this->plugin->txt('status_inactive'), ilTestArchiveCreatorPlugin::STATUS_INACTIVE);
-		$st_planned = new ilRadioOption($this->plugin->txt('status_planned'), ilTestArchiveCreatorPlugin::STATUS_PLANNED);
-		$st_finished = new ilRadioOption($this->plugin->txt('status_finished'), ilTestArchiveCreatorPlugin::STATUS_FINISHED);
-		$st_finished->setDisabled(true);
+    /**
+     * Prepare the test header, tabs etc.
+     */
+    protected function prepareOutput()
+    {
+        /** @var ilLocatorGUI $ilLocator */
+        /** @var ilLanguage $lng */
+        global $ilLocator, $lng;
 
-		$status = new ilRadioGroupInputGUI($this->plugin->txt('status'), 'status');
-		$status->addOption($st_inactive);
-		$status->addOption($st_planned);
-		$status->addOption($st_finished);
-		$status->setValue($this->settings->status);
-		$form->addItem($status);
+        $this->ctrl->setParameterByClass('ilObjTestGUI', 'ref_id', $this->testObj->getRefId());
+        $ilLocator->addRepositoryItems($this->testObj->getRefId());
+        $ilLocator->addItem($this->testObj->getTitle(), $this->ctrl->getLinkTargetByClass('ilObjTestGUI'));
 
-		$schedule = new ilDateTimeInputGUI($this->plugin->txt('schedule'), 'schedule');
-		$schedule->setShowTime(true);
-		$schedule->setShowSeconds(false);
-		$schedule->setMinuteStepSize(10);
-		$schedule->setDate($this->settings->schedule);
-		$schedule->setInfo($this->plugin->txt('schedule_info'));
-		$schedule->setRequired(true);
-		$st_planned->addSubItem($schedule);
+        // $this->tpl->getStandardTemplate();
+        //https://github.com/ILIAS-eLearning/ILIAS/commit/0c199948c24dc454f36d6dc3fca3765dfa39e5a4
+        $this->tpl->loadStandardTemplate();
 
-		if (!$this->plugin->isCronPluginActive()) {
-			$status->setDisabled(true);
-			$status->setInfo($this->plugin->txt('message_cron_plugin_inactive'));
-			$schedule->setDisabled(true);
-		}
+        $this->tpl->setLocator();
+        $this->tpl->setTitle($this->testObj->getPresentationTitle());
+        $this->tpl->setDescription($this->testObj->getLongDescription());
+        $this->tpl->setTitleIcon(ilObject::_getIcon(0, 'big', 'tst'), $lng->txt('obj_tst'));
+
+        return true;
+    }
+
+    /**
+     * Init the settings form
+     */
+    protected function initSettingsForm()
+    {
+        $form = new ilPropertyFormGUI();
+        $form->setFormAction($this->ctrl->getFormAction($this, 'editSettings'));
+        $form->setTitle($this->plugin->txt('edit_archive_settings'));
+
+
+        $st_inactive = new ilRadioOption($this->plugin->txt('status_inactive'), ilTestArchiveCreatorPlugin::STATUS_INACTIVE);
+        $st_planned = new ilRadioOption($this->plugin->txt('status_planned'), ilTestArchiveCreatorPlugin::STATUS_PLANNED);
+        $st_finished = new ilRadioOption($this->plugin->txt('status_finished'), ilTestArchiveCreatorPlugin::STATUS_FINISHED);
+        $st_finished->setDisabled(true);
+
+        $status = new ilRadioGroupInputGUI($this->plugin->txt('status'), 'status');
+        $status->addOption($st_inactive);
+        $status->addOption($st_planned);
+        $status->addOption($st_finished);
+        $status->setValue($this->settings->status);
+        $form->addItem($status);
+
+        $schedule = new ilDateTimeInputGUI($this->plugin->txt('schedule'), 'schedule');
+        $schedule->setShowTime(true);
+        $schedule->setShowSeconds(false);
+        $schedule->setMinuteStepSize(10);
+        $schedule->setDate($this->settings->schedule);
+        $schedule->setInfo($this->plugin->txt('schedule_info'));
+        $schedule->setRequired(true);
+        $st_planned->addSubItem($schedule);
+
+        if (!$this->plugin->isCronPluginActive()) {
+            $status->setDisabled(true);
+            $status->setInfo($this->plugin->txt('message_cron_plugin_inactive'));
+            $schedule->setDisabled(true);
+        }
 
         $questions = new ilCheckboxInputGUI($this->plugin->txt('include_questions'), 'include_questions');
         $questions->setInfo($this->plugin->txt('include_questions_info'));
@@ -282,27 +277,27 @@ class ilTestArchiveCreatorSettingsGUI
         $zoom_factor->setValue($this->settings->zoom_factor * 100);
         $form->addItem($zoom_factor);
 
-//        $min_wait = new ilNumberInputGUI($this->plugin->txt('min_rendering_wait'), 'min_rendering_wait');
-//        $min_wait->setInfo($this->plugin->txt('min_rendering_wait_info'));
-//        $min_wait->setSize(5);
-//        $min_wait->allowDecimals(false);
-//        $min_wait->setValue($this->settings->min_rendering_wait);
-//        $min_wait->setMinValue(1);
-//        $form->addItem($min_wait);
-//
-//        $max_wait = new ilNumberInputGUI($this->plugin->txt('max_rendering_wait'), 'max_rendering_wait');
-//        $max_wait->setInfo($this->plugin->txt('max_rendering_wait_info'));
-//        $max_wait->setSize(5);
-//        $max_wait->allowDecimals(false);
-//        $max_wait->setMinValue(1);
-//        $max_wait->setValue($this->settings->max_rendering_wait);
-//        $form->addItem($max_wait);
+        //        $min_wait = new ilNumberInputGUI($this->plugin->txt('min_rendering_wait'), 'min_rendering_wait');
+        //        $min_wait->setInfo($this->plugin->txt('min_rendering_wait_info'));
+        //        $min_wait->setSize(5);
+        //        $min_wait->allowDecimals(false);
+        //        $min_wait->setValue($this->settings->min_rendering_wait);
+        //        $min_wait->setMinValue(1);
+        //        $form->addItem($min_wait);
+        //
+        //        $max_wait = new ilNumberInputGUI($this->plugin->txt('max_rendering_wait'), 'max_rendering_wait');
+        //        $max_wait->setInfo($this->plugin->txt('max_rendering_wait_info'));
+        //        $max_wait->setSize(5);
+        //        $max_wait->allowDecimals(false);
+        //        $max_wait->setMinValue(1);
+        //        $max_wait->setValue($this->settings->max_rendering_wait);
+        //        $form->addItem($max_wait);
 
-		$form->addCommandButton('saveSettings', $this->lng->txt('save'));
-		$form->addCommandButton('cancelSettings', $this->lng->txt('cancel'));
+        $form->addCommandButton('saveSettings', $this->lng->txt('save'));
+        $form->addCommandButton('cancelSettings', $this->lng->txt('cancel'));
 
-		return $form;
-	}
+        return $form;
+    }
 
 
     /**
@@ -310,11 +305,11 @@ class ilTestArchiveCreatorSettingsGUI
      */
     protected function editSettings()
     {
-		$form = $this->initSettingsForm();
+        $form = $this->initSettingsForm();
         $this->tpl->setContent($form->getHTML());
-		// https://github.com/ILIAS-eLearning/ILIAS/commit/84424ec7abfb0fa61acf3a606754ce654f70ca61
+        // https://github.com/ILIAS-eLearning/ILIAS/commit/84424ec7abfb0fa61acf3a606754ce654f70ca61
         // $this->tpl->show();
-		$this->tpl->printToStdout();
+        $this->tpl->printToStdout();
     }
 
 
@@ -323,17 +318,16 @@ class ilTestArchiveCreatorSettingsGUI
      */
     protected function saveSettings()
     {
-		$form = $this->initSettingsForm();
-		if (!$form->checkInput())
-		{
-			$form->setValuesByPost();
+        $form = $this->initSettingsForm();
+        if (!$form->checkInput()) {
+            $form->setValuesByPost();
             $this->prepareOutput();
-			$this->tpl->setContent($form->getHTML());
+            $this->tpl->setContent($form->getHTML());
             $this->tpl->printToStdout();
-			return;
-		}
-		$this->settings->status = $form->getInput('status');
-		$this->settings->schedule = $form->getItemByPostVar('schedule')->getDate();
+            return;
+        }
+        $this->settings->status = $form->getInput('status');
+        $this->settings->schedule = $form->getItemByPostVar('schedule')->getDate();
 
         $this->settings->include_questions = $form->getInput('include_questions');
         $this->settings->include_answers = $form->getInput('include_answers');
@@ -346,58 +340,57 @@ class ilTestArchiveCreatorSettingsGUI
         }
 
         $this->settings->orientation = $form->getInput('orientation');
-		$this->settings->zoom_factor = $form->getInput('zoom_factor') / 100;
+        $this->settings->zoom_factor = $form->getInput('zoom_factor') / 100;
 
-//        $this->settings->min_rendering_wait = $form->getInput('min_rendering_wait');
-//        $this->settings->max_rendering_wait = $form->getInput('max_rendering_wait');
+        //        $this->settings->min_rendering_wait = $form->getInput('min_rendering_wait');
+        //        $this->settings->max_rendering_wait = $form->getInput('max_rendering_wait');
 
         $this->settings->save();
 
         $this->tpl->setOnScreenMessage('success', $this->lng->txt("settings_saved"), true);
-		$this->returnToExport();
+        $this->returnToExport();
     }
 
 
-	/**
-	 * Cancel the archive settings
-	 */
-	protected function cancelSettings()
-	{
-		$this->returnToExport();
-	}
+    /**
+     * Cancel the archive settings
+     */
+    protected function cancelSettings()
+    {
+        $this->returnToExport();
+    }
 
 
-	/**
+    /**
      * Call the archive creation
      */
     protected function createArchive()
     {
-    	$creator = $this->plugin->getArchiveCreator($this->testObj->getId());
-    	if ($creator->createArchive()) {
+        $creator = $this->plugin->getArchiveCreator($this->testObj->getId());
+        if ($creator->createArchive()) {
             $this->tpl->setOnScreenMessage('success', $this->plugin->txt('archive created'));
         } else {
             $this->tpl->setOnScreenMessage('failure', $this->plugin->txt('archive errors')
             . '<br>' . implode('<br>', $creator->getErrors()));
         }
-		$this->returnToExport();
+        $this->returnToExport();
     }
 
 
-	/**
-	 * Get the link target for a command using the ui plugin router
-	 * @param string $a_cmd
-	 * @return string
-	 */
-	protected function getLinkTarget($a_cmd = '')
-	{
-		return $this->ctrl->getLinkTargetByClass(array('ilUIPluginRouterGUI', get_class($this)), $a_cmd);
-	}
+    /**
+     * Get the link target for a command using the ui plugin router
+     * @param string $a_cmd
+     * @return string
+     */
+    protected function getLinkTarget($a_cmd = '')
+    {
+        return $this->ctrl->getLinkTargetByClass(array('ilUIPluginRouterGUI', get_class($this)), $a_cmd);
+    }
 
 
-	protected function returnToExport()
-	{
-		$this->ctrl->setParameterByClass('ilTestExportGUI', 'ref_id', $this->testObj->getRefId());
-		$this->ctrl->redirectByClass(array('ilobjtestgui', 'iltestexportgui'));
-	}
+    protected function returnToExport()
+    {
+        $this->ctrl->setParameterByClass('ilTestExportGUI', 'ref_id', $this->testObj->getRefId());
+        $this->ctrl->redirectByClass(array('ilobjtestgui', 'iltestexportgui'));
+    }
 }
-?>

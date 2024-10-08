@@ -43,7 +43,7 @@ class ilTestArchiveCreatorAssets
         $this->storage = $this->filesystems->getPureStorage();
         $this->assets = $assets;
 
-        $this->storage_path = $workdir. '/assets';
+        $this->storage_path = $workdir . '/assets';
         $this->assets_url = $assets_url;
 
         $this->resource_storage = $DIC->resourceStorage();
@@ -55,11 +55,11 @@ class ilTestArchiveCreatorAssets
      * @param string $path  path of the file from which the embedded assets should be linked (relative to working directory)
      * @return string
      */
-    public function processForEmbedding(string $html, string $path) : string
+    public function processForEmbedding(string $html, string $path): string
     {
         $this->copy_assets = true;
         $this->linking_path = str_repeat('../', substr_count($path, '/')) . 'assets';
-        return $this->processXslt($html, __DIR__. '/../templates/assets.xsl');
+        return $this->processXslt($html, __DIR__ . '/../templates/assets.xsl');
     }
 
     /**
@@ -67,18 +67,18 @@ class ilTestArchiveCreatorAssets
      * @param string $html  HTML code to be processed
      * @return string
      */
-    public function processForPdfGeneration(string $html) : string
+    public function processForPdfGeneration(string $html): string
     {
         $this->copy_assets = true; // needed for asset delivery script
         $this->linking_path = $this->assets_url;
-        return $this->processXslt($html, __DIR__. '/../templates/assets.xsl');
+        return $this->processXslt($html, __DIR__ . '/../templates/assets.xsl');
     }
 
     /**
      * Process HTML code with XSLT
      * This will replace URLs in attributes line 'src' with the function process URL
      */
-    protected function processXslt(string $html, string $xslt_file) : string
+    protected function processXslt(string $html, string $xslt_file): string
     {
         try {
             // get the xslt document
@@ -99,8 +99,7 @@ class ilTestArchiveCreatorAssets
             $result = $xslt->transformToDoc($dom_doc);
             $processed = $result->saveHTML();
             return $processed;
-        }
-        catch (\Throwable $e) {
+        } catch (\Throwable $e) {
             return 'HTML PROCESSING ERROR:<br>' . $e->getMessage() . '<hr>' . $html;
         }
     }
@@ -113,7 +112,7 @@ class ilTestArchiveCreatorAssets
      * @param bool $in_asset        css code is already in an asset file that is copied to the archive
      * @return string               the processed css code
      */
-    protected function processStyle(string $css, string $url_path, bool $in_asset = true) : string
+    protected function processStyle(string $css, string $url_path, bool $in_asset = true): string
     {
         // get the prefix for relative urls
         $info = pathinfo($url_path);
@@ -124,12 +123,12 @@ class ilTestArchiveCreatorAssets
             if (isset($matches[1])) {
                 foreach ($matches[1] as $url) {
                     // remove quotation and whitespaces
-                    $new = str_replace('\'','', $url);
-                    $new = str_replace('"','', $new);
-                    $new= trim($new);
+                    $new = str_replace('\'', '', $url);
+                    $new = str_replace('"', '', $new);
+                    $new = trim($new);
 
                     // make relative to the ilias directory
-                    $new = './' . $this->filesystems->removeDots($prefix . '/' .$new);
+                    $new = './' . $this->filesystems->removeDots($prefix . '/' . $new);
 
                     // replaced with processed url
                     $new = $this->processUrl($new, $in_asset);
@@ -147,7 +146,7 @@ class ilTestArchiveCreatorAssets
      * @param bool $in_asset            URL is already in an asset file, target will be copied to the same directory
      * @return string                   Offline URL to the asset folder in the archive or online URL to the asset delivery script
      */
-    protected function processUrl(string $url, bool $in_asset = false) : string
+    protected function processUrl(string $url, bool $in_asset = false): string
     {
         try {
             $parsed = parse_url(str_replace(ILIAS_HTTP_PATH, '.', $url));
@@ -173,8 +172,7 @@ class ilTestArchiveCreatorAssets
                         $this->storage->writeStream($this->storage_path . '/' . $asset_name, $consumer->getStream());
                     }
                 }
-            }
-            elseif (isset($parsed['path'])) {
+            } elseif (isset($parsed['path'])) {
                 // url is a direct path to an asset
 
                 $system = $this->filesystems->deriveFilesystemFrom($parsed['path']);
@@ -220,8 +218,7 @@ class ilTestArchiveCreatorAssets
                 if (!$in_asset || $this->linking_path == $this->assets_url) {
                     // offline link to asset directory or online url to delivery script
                     return $this->linking_path . '/' . $asset_name;
-                }
-                else {
+                } else {
                     // offline link from asset to asset (same directory)
                     return $asset_name;
                 }
@@ -229,8 +226,7 @@ class ilTestArchiveCreatorAssets
 
             // leave original url if asset can't be processed
             return $url;
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             return $url;
         }
     }
@@ -239,7 +235,7 @@ class ilTestArchiveCreatorAssets
     /**
      * Get the resource ID of a file resource from the query string
      */
-    public function getResourceId(string $query) : ?string
+    public function getResourceId(string $query): ?string
     {
         $params = [];
         parse_str($query, $params);
@@ -260,7 +256,7 @@ class ilTestArchiveCreatorAssets
      * Check if an extension is allowed for being copied to the archive
      * PHP files should not be copied
      */
-    protected function checkExtension(string $extension) : bool
+    protected function checkExtension(string $extension): bool
     {
         $forbidden = ['php'];
         return !in_array(strtolower($extension), $forbidden);
