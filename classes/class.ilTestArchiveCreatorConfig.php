@@ -136,14 +136,10 @@ class ilTestArchiveCreatorConfig
         $this->user_allow = (string) $this->settings->get('user_allow', self::ALLOW_ANY);
         $this->pdf_engine = (string) $this->settings->get('pdf_engine', self::ENGINE_NONE);
 
-        $this->phantomjs_path = (string) $this->settings->get('phantomjs_path', '/opt/phantomjs/phantomjs');
         $this->hide_standard_archive = (bool) $this->settings->get('hide_standard_archive', true);
         $this->keep_creation_directory = (bool) $this->settings->get('keep_creation_directory', false);
         $this->keep_jobfile = (bool) $this->settings->get('keep_jobfile', false);
-        $this->use_system_styles = (bool) $this->settings->get('use_system_styles', true);
-        $this->any_ssl_protocol = (bool) $this->settings->get('any_ssl_protocol', false);
         $this->ignore_ssl_errors = (bool) $this->settings->get('ignore_ssl_errors', false);
-        $this->render_twice = (bool) $this->settings->get('render_twice', false);
 
         $this->bs_node_module_path = (string) $this->settings->get('bs_node_module_path', '/home/www-data/node_modules/');
         $this->bs_chrome_path = (string) $this->settings->get('bs_chrome_path', '/home/www-data/.cache/puppeteer/chrome/linux-1108766/chrome-linux/chrome');
@@ -167,9 +163,6 @@ class ilTestArchiveCreatorConfig
 
         $this->zoom_factor = (float) $this->settings->get('zoom_factor', '1.0');
         $this->orientation = (string) $this->settings->get('orientation', ilTestArchiveCreatorPlugin::ORIENTATION_PORTRAIT);
-
-        $this->min_rendering_wait = (int) $this->settings->get('min_rendering_wait', 200);
-        $this->max_rendering_wait = (int) $this->settings->get('max_rendering_wait', 2000);
     }
 
 
@@ -181,14 +174,10 @@ class ilTestArchiveCreatorConfig
         $this->settings->set('user_allow', (string) $this->user_allow);
         $this->settings->set('embed_assets', (bool) $this->embed_assets ? '1' : '0');
         $this->settings->set('pdf_engine', (string) $this->pdf_engine);
-        $this->settings->set('phantomjs_path', (string) $this->phantomjs_path);
         $this->settings->set('hide_standard_archive', (bool) $this->hide_standard_archive ? '1' : '0');
         $this->settings->set('keep_creation_directory', (bool) $this->keep_creation_directory ? '1' : '0');
         $this->settings->set('keep_jobfile', (bool) $this->keep_jobfile ? '1' : '0');
-        $this->settings->set('use_system_styles', (bool) $this->use_system_styles ? '1' : '0');
-        $this->settings->set('any_ssl_protocol', (bool) $this->any_ssl_protocol ? '1' : '0');
         $this->settings->set('ignore_ssl_errors', (bool) $this->ignore_ssl_errors ? '1' : '0');
-        $this->settings->set('render_twice', (bool) $this->render_twice ? '1' : '0');
 
         $this->settings->set('bs_node_module_path', (string) $this->bs_node_module_path);
         $this->settings->set('bs_chrome_path', (string) $this->bs_chrome_path);
@@ -212,9 +201,6 @@ class ilTestArchiveCreatorConfig
 
         $this->settings->set('zoom_factor', (string) $this->zoom_factor);
         $this->settings->set('orientation', (string) $this->orientation);
-
-        $this->settings->set('min_rendering_wait', $this->min_rendering_wait ? (int) $this->min_rendering_wait : 1);
-        $this->settings->set('max_rendering_wait', $this->max_rendering_wait ? (int) $this->max_rendering_wait : 1);
     }
 
 

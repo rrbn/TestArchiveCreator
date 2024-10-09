@@ -77,12 +77,7 @@ abstract class ilTestArchiveCreatorPDF
 			'footLeft' => $this->plugin->txt('label_generated') . ' '. $this->time,
 		];
 		$this->jobs[] = $job;
-
-		if ($this->config->render_twice)
-		{
-            $this->jobs[] = $job;
-        }
-		return $job;
+        return $job;
 	}
 
     /**

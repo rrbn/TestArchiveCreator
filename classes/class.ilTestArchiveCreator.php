@@ -77,10 +77,6 @@ class ilTestArchiveCreator
         $this->assetsProcessor = new ilTestArchiveCreatorAssets($this->assets, $this->workdir, $this->plugin->getAssetsUrl($this->testObj->getId()));
 
         switch($this->config->pdf_engine) {
-            case ilTestArchiveCreatorConfig::ENGINE_PHANTOM:
-                $this->pdfCreator = new ilTestArchiveCreatorPhantomJS($this->plugin, $this->settings, $this->workdir);
-                break;
-
             case ilTestArchiveCreatorConfig::ENGINE_BROWSERSHOT:
                 $this->pdfCreator = new ilTestArchiveCreatorBrowsershot($this->plugin, $this->settings, $this->workdir);
                 break;

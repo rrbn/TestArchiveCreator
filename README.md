@@ -10,9 +10,8 @@ This plugin for the LMS ILIAS open source allows the creation of zipped archives
 
 The actual PDF rendering is done by a headless browser which has to be installed in the web server. Corrently the plugin supports two renderers:
 
-* PhantomJS (deprecated), see [Installation](./docs/install-phantomjs.md)
-* Puppeteer via Browsershot, see [Installation](./docs/install-puppeteer-browsershot.md)
-* Puppeteer on separate Server (experimental), see this [Server Script](https://github.com/fneumann/tarc-pdf)
+* Puppeteer on the ILIAS server, see [Installation](./docs/install-puppeteer-local.md)
+* Puppeteer on a separate Server, see this [Server Script](https://github.com/fneumann/tarc-pdf)
 
 ## Issues
 

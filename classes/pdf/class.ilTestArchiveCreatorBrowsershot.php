@@ -47,11 +47,11 @@ class ilTestArchiveCreatorBrowsershot extends ilTestArchiveCreatorPDF
                 $footer = $job['footLeft'] ?? '';
 
                 $engine->headerHtml(
-                    '<p style="font-size:5px; padding-left:30px; margin-top:-5px;">'
+                    '<p style="font-size:10pt; padding-left:20mm; margin-top:-2mm;">'
                     . $header
                     .'</p>');
                 $engine->footerHtml(
-                    '<p style="font-size:5px; padding-left:30px;margin-top:5px;">' .
+                    '<p style="font-size:10pt; padding-left:20mm;margin-top:5mm;">' .
                         '<span class="pageNumber"></span> / <span class="totalPages"></span> - '
                         . $footer
                         . '</p>'

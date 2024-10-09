@@ -85,14 +85,10 @@ class ilTestArchiveCreatorConfigGUI extends ilPluginConfigGUI
         $this->config->pdf_engine = $form->getInput('pdf_engine');
         $this->config->embed_assets = $form->getInput('embed_assets');
 
-        $this->config->phantomjs_path = $form->getInput('phantomjs_path');
         $this->config->hide_standard_archive = $form->getInput('hide_standard_archive');
         $this->config->keep_creation_directory = $form->getInput('keep_creation_directory');
         $this->config->keep_jobfile = $form->getInput('keep_jobfile');
-        $this->config->use_system_styles = $form->getInput('use_system_styles');
-        $this->config->any_ssl_protocol = $form->getInput('any_ssl_protocol');
         $this->config->ignore_ssl_errors = $form->getInput('ignore_ssl_errors');
-        $this->config->render_twice = $form->getInput('render_twice');
 
         $this->config->bs_node_module_path = $form->getInput('bs_node_module_path');
         $this->config->bs_chrome_path = $form->getInput('bs_chrome_path');
@@ -120,9 +116,6 @@ class ilTestArchiveCreatorConfigGUI extends ilPluginConfigGUI
 
         $this->config->zoom_factor = $form->getInput('zoom_factor') / 100;
         $this->config->orientation = $form->getInput('orientation');
-
-        $this->config->min_rendering_wait = $form->getInput('min_rendering_wait');
-        $this->config->max_rendering_wait = $form->getInput('max_rendering_wait');
 
         $this->config->user_allow = $form->getInput('user_allow');
 
@@ -174,48 +167,7 @@ class ilTestArchiveCreatorConfigGUI extends ilPluginConfigGUI
         $none->setInfo($this->plugin->txt('pdf_engine_none_info'));
         $engine->addOption($none);
 
-        // PhantomJS
-
-        $phantom = new ilRadioOption($this->plugin->txt('pdf_engine_phantom'), ilTestArchiveCreatorConfig::ENGINE_PHANTOM);
-        $engine->addOption($phantom);
-
-        $path = new ilTextInputGUI($this->plugin->txt('phantomjs_path'), 'phantomjs_path');
-        $path->setInfo($this->plugin->txt('phantomjs_path_info'));
-        $path->setValue($this->config->phantomjs_path);
-        $phantom->addSubItem($path);
-
-        $styles = new ilCheckboxInputGUI($this->plugin->txt('use_system_styles'), 'use_system_styles');
-        $styles->setInfo($this->plugin->txt('use_system_styles_info'));
-        $styles->setChecked($this->config->use_system_styles);
-        $phantom->addSubItem($styles);
-
-        $protocol = new ilCheckboxInputGUI($this->plugin->txt('any_ssl_protocol'), 'any_ssl_protocol');
-        $protocol->setInfo($this->plugin->txt('any_ssl_protocol_info'));
-        $protocol->setChecked($this->config->any_ssl_protocol);
-        $phantom->addSubItem($protocol);
-
-        $twice = new ilCheckboxInputGUI($this->plugin->txt('render_twice'), 'render_twice');
-        $twice->setInfo($this->plugin->txt('render_twice_info'));
-        $twice->setChecked($this->config->render_twice);
-        $phantom->addSubItem($twice);
-
-        $min_wait = new ilNumberInputGUI($this->plugin->txt('min_rendering_wait'), 'min_rendering_wait');
-        $min_wait->setInfo($this->plugin->txt('min_rendering_wait_info'));
-        $min_wait->setSize(5);
-        $min_wait->allowDecimals(false);
-        $min_wait->setValue($this->config->min_rendering_wait);
-        $min_wait->setMinValue(1);
-        $phantom->addSubItem($min_wait);
-
-        $max_wait = new ilNumberInputGUI($this->plugin->txt('max_rendering_wait'), 'max_rendering_wait');
-        $max_wait->setInfo($this->plugin->txt('max_rendering_wait_info'));
-        $max_wait->setSize(5);
-        $max_wait->allowDecimals(false);
-        $max_wait->setMinValue(1);
-        $max_wait->setValue($this->config->max_rendering_wait);
-        $phantom->addSubItem($max_wait);
-
-        // Browsershot
+        // Local Puppeteer via Browsershot
 
         $browsershot = new ilRadioOption($this->plugin->txt('pdf_engine_browsershot'), ilTestArchiveCreatorConfig::ENGINE_BROWSERSHOT);
         $engine->addOption($browsershot);
@@ -240,7 +192,7 @@ class ilTestArchiveCreatorConfigGUI extends ilPluginConfigGUI
         $path->setValue($this->config->bs_npm_path);
         $browsershot->addSubItem($path);
 
-        // Server
+        // Remote Puppeteer Server
 
         $server = new ilRadioOption($this->plugin->txt('pdf_engine_server'), ilTestArchiveCreatorConfig::ENGINE_SERVER);
         $engine->addOption($server);

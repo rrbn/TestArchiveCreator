@@ -129,7 +129,7 @@ pdf_engine#:#PDF Generierung
 pdf_engine_none#:#Keine
 pdf_engine_none_info#:#Es werden nur HTML-Dateien erzeugt. Sie sollten dann die lokalen Medien ins Archiv einbinden, damit diese auch bei aktivem WebAccessChecker oder nach dem Löschen des Tests verfügbar sind.
 pdf_engine_phantom#:#PhantomJS (deprecated)
-pdf_engine_browsershot#:#Browsershot
+pdf_engine_browsershot#:#Puppeteer auf ILIAS-Server
 bs_node_module_path#:#Node Modules
 bs_node_module_path_info#:#Pfad zum Verzeichnis node_modules der puppeteer-Installation (mit / am Ende)
 bs_chrome_path#:#Chrome
@@ -155,6 +155,6 @@ log_login#:#Login-Name
 log_question_id#:#Fragen-ID
 log_question#:#Frage
 log_logtext#:#Protokolleintrag
-pdf_engine_server#:#Generierungs-Server (experimentell)
+pdf_engine_server#:#Puppeteer auf separatem Server
 server_url#:#Url
 server_url_info#:#Url eines Servers der zur PDF-Generierung aufgerufen wird. Eine Beispiel-Implementierung ist https://github.com/fneumann/tarc-pdf

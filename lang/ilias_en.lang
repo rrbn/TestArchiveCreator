@@ -122,14 +122,14 @@ allow_planned_info#:#Create archives only planned. This requires a running cron 
 allow_none#:#Not Allowed
 allow_none_info#:#Only ILIAS administrators can create archives
 schedule_info#:#Earliest creation time. The actual time is determined by the system settings of the archiving cron job.
-generation_settings#:Settings for generation
+generation_settings#:#Settings for Generation
 embed_assets#:#Integrate Local Media for HTML Export
 embed_assets_info#:#Required images, audio, videos, styles and JavaScript files from this ILIAS installation are copied to the archive and used from there in the HTML files of the archive. Media from other sources will continue to be used with their external URL.
 pdf_engine#:#PDF Generation
 pdf_engine_none#:#None
 pdf_engine_none_info#:#Only HTML files are generated. You should then include the local media in the archive so that they are also available when WebAccessChecker is active or after the test has been deleted.
 pdf_engine_phantom#:#PhantomJS (deprecated)
-pdf_engine_browsershot#:#Browsershot
+pdf_engine_browsershot#:#Puppeteer on ILIAS Server
 bs_node_module_path#:#Node Modules
 bs_node_module_path_info#:#Path to the directory node_modules of the puppeteer installation (with / at the end)
 bs_chrome_path#:#Chrome
@@ -153,6 +153,6 @@ log_login#:#Login Name
 log_question_id#:#Question ID
 log_question#:#Question
 log_logtext#:#Log Text
-pdf_engine_server#:#Generating Server (experimental)
+pdf_engine_server#:#Puppeteer on Separate Server
 server_url#:#Url
 server_url_info#:#Url of a server for pDF generation. An example implementation id https://github.com/fneumann/tarc-pdf
