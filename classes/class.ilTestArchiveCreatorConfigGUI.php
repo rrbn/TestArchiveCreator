@@ -170,6 +170,7 @@ class ilTestArchiveCreatorConfigGUI extends ilPluginConfigGUI
         // Local Puppeteer via Browsershot
 
         $browsershot = new ilRadioOption($this->plugin->txt('pdf_engine_browsershot'), ilTestArchiveCreatorConfig::ENGINE_BROWSERSHOT);
+        $browsershot->setInfo($this->plugin->txt('pdf_engine_browsershot_info'));
         $engine->addOption($browsershot);
 
         $path = new ilTextInputGUI($this->plugin->txt('bs_node_module_path'), 'bs_node_module_path');

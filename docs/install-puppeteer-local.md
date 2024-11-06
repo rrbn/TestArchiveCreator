@@ -4,7 +4,7 @@
 
 If it should be used for PDF generation, it must be installed on the server that runs the PHP processes of ILIAS and must be executable by the user of the PHP process.
 
-The following installation procedure has been tested on Ubuntu 20.04 running ILIAS with user `www-data` and group `www-data`. You should do the installation steps as root user on the server. You may choose your preferred installation directory - here we use `/srv/puppeteer`.
+The following installation procedure has been tested on Ubuntu 20.04 running ILIAS with user `www-data` and group `www-data`. You should do the installation steps as **root user** on the server. You may choose your preferred installation directory - here we use `/srv/puppeteer`.
 
 First install some dependencies globally:
 ````
@@ -12,7 +12,7 @@ apt install nodejs
 apt install libxdamage
 ````
 
-The puppeteer installation will automatically add the headless chrome to the home directory of the current user. Tho avoid this being done in the home of root, create a temporary user for the installation and change the directory ownership afterwards.
+The puppeteer installation will automatically add the headless chrome to the home directory of the current user. To avoid this being done in the home of root, create a temporary user for the installation and change the directory ownership afterwards.
 
 ````
 useradd -d /srv/puppeteer -m -s /bin/bash puppeteer
