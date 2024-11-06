@@ -132,3 +132,15 @@ if (!$ilDB->tableColumnExists('tarc_ui_settings', 'max_rendering_wait')) {
     ));
 }
 ?>
+<#12>
+<?php
+if ($ilDB->tableColumnExists('tarc_ui_settings', 'min_rendering_wait')) {
+    $ilDB->dropTableColumn('tarc_ui_settings', 'min_rendering_wait');
+}
+?>
+<#13>
+<?php
+if ($ilDB->tableColumnExists('tarc_ui_settings', 'max_rendering_wait')) {
+    $ilDB->dropTableColumn('tarc_ui_settings', 'max_rendering_wait');
+}
+?>

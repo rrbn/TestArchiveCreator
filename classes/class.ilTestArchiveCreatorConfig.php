@@ -23,9 +23,6 @@ class ilTestArchiveCreatorConfig
     /** @var string engine to be used for pdf generation */
     public string $pdf_engine;
 
-    /** @var  string path to the executable of PhantomJS */
-    public string $phantomjs_path;
-
     /** @var float zoom factor for pdf generation */
     public float $zoom_factor;
 
@@ -55,30 +52,6 @@ class ilTestArchiveCreatorConfig
 
     /** @var bool embed the asset files in the archive */
     public bool $embed_assets;
-
-    /** @var  bool use the system styles for generation with phantomjs (always used with other engines)
-     * todo: always use and remove this variable when phantomjs is removed */
-    public bool $use_system_styles;
-
-    /** @var bool allow any ssl protocol with the pdf engine
-     * todo: always allow and remove this variable */
-    public bool $any_ssl_protocol;
-
-    /** @var bool ignore ssl errors at pdf generation (phantomjs and browsershot)
-     * todo: always ignore and remove this variable */
-    public bool $ignore_ssl_errors;
-
-    /** @var int minimum seconds to wait for rendering
-     * todo: use this variable for puppeteer */
-    public int $min_rendering_wait;
-
-    /** @var int maximum seconds to wait for rendering
-     * todo: use this variable for puppeteer */
-    public int $max_rendering_wait;
-
-    /** @var bool render twice
-     * todo: remove this variable whem phantomjs is removed */
-    public bool $render_twice;
 
     /** @var string path to node_modules for browsershot */
     public string $bs_node_module_path;

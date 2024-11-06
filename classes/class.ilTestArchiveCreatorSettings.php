@@ -19,8 +19,6 @@ class ilTestArchiveCreatorSettings
     public bool $include_answers;
     public bool $questions_with_best_solution;
     public bool $answers_with_best_solution;
-    public bool $min_rendering_wait;
-    public bool $max_rendering_wait;
     public float $zoom_factor;
     public string $orientation;
 
@@ -60,8 +58,6 @@ class ilTestArchiveCreatorSettings
             $this->random_questions = (string) $row['random_questions'];
             $this->zoom_factor = (float) $row['zoom_factor'];
             $this->orientation = (string) $row['orientation'];
-            $this->min_rendering_wait = (int) $row['min_rendering_wait'];
-            $this->max_rendering_wait = (int) $row['max_rendering_wait'];
         } else {
             // initialize values with those if the global configuration
             $config = $this->plugin->getConfig();
@@ -73,8 +69,6 @@ class ilTestArchiveCreatorSettings
             $this->random_questions = (string) $config->random_questions;
             $this->zoom_factor = (float) $config->zoom_factor;
             $this->orientation = (string) $config->orientation;
-            $this->min_rendering_wait = (int) $config->min_rendering_wait;
-            $this->max_rendering_wait = (int) $config->max_rendering_wait;
         }
     }
 
@@ -99,9 +93,7 @@ class ilTestArchiveCreatorSettings
                 'pass_selection' => array('text', $this->pass_selection),
                 'random_questions' => array('text', $this->random_questions),
                 'zoom_factor' => array('float', $this->zoom_factor),
-                'orientation' => array('string', $this->orientation),
-                'min_rendering_wait' => array('integer', $this->min_rendering_wait),
-                'max_rendering_wait' => array('integer', $this->max_rendering_wait)
+                'orientation' => array('string', $this->orientation)
             )
         );
         return $rows > 0;

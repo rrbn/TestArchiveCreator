@@ -114,17 +114,8 @@ class ilTestArchiveCreatorHTML
         }
 
         // specific content styles, see ilPortfolioPageGUI
-        //        $tpl->setVariable("LOCATION_ADDITIONAL_STYLESHEET", ilObjStyleSheet::getPlaceHolderStylePath());
         $tpl->setVariable("LOCATION_SYNTAX_STYLESHEET", ilObjStyleSheet::getSyntaxStylePath());
-
-        // system style
-        // inclusion is optional for phantomjs
-        // web fonts may produce large pdf files with unselectable text
-        if (!$for_pdf
-            || $this->config->pdf_engine != ilTestArchiveCreatorConfig::ENGINE_PHANTOM
-            || $this->plugin->getConfig()->use_system_styles) {
-            $tpl->setVariable("LOCATION_STYLESHEET", ilUtil::getStyleSheetLocation());
-        }
+        $tpl->setVariable("LOCATION_STYLESHEET", ilUtil::getStyleSheetLocation());
 
         // content styles
         // add the stylesheet of the plugin as last one

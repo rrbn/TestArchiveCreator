@@ -64,8 +64,6 @@ orientation_portrait#:#Hochformat
 orientation_landscape#:#Querformat
 zoom_factor#:#Vergrößerung (%)
 plugin_configuration#:#Plugin-Konfiguration
-phantomjs_path#:#Pfad zu PhantomJS
-phantomjs_path_info#:#Server-Pfad zu einer ausführbaren Datei von PhantomJS. Siehe http://phantomjs.org
 hide_standard_archive#:#Standard-Archiv ausblenden
 hide_standard_archive_info#:#Blendet auf dem Export-Reiter die Export-Option für das Standard-Testarchiv von ILIAS aus.
 privacy_settings#:#Datenschutz-Einstellungen
@@ -90,20 +88,10 @@ participants_html#:#Teilnehmer*innen (HTML)
 settings_html#:#Test-Einstellungen (HTML)
 introduction_html#:#Einleitung (HTML)
 test_archive#:#Test-Archiv
-use_system_styles#:#System-Styles verwenden
-use_system_styles_info#:#Verwendet die System-Styles (Standard: delos.css) bei der PDF-Generierung. Durch den verwendeten Web-Font sind die PDF-Dateien bei der Generierung mit PhantomJS 2.1.1 größer und nicht durchsuchbar.
-any_ssl_protocol#:#Beliebiges SSL-Protokoll
-any_ssl_protocol_info#:#Erlaubt beliebige SSL-Protokolle beim Laden von eingebetteten Bildern, Styles und Skripten. Wird für PhantomJS 1.9.8 benötigt.
 ignore_ssl_errors#:#SSL-Fehler ignorieren
 ignore_ssl_errors_info#:#Ignoriert SSL-Zertifikatsfehler beim Laden von eingebetteten Bildern, Styles und Skripten.
 keep_jobfile#:#Jobfiles behalten
 keep_jobfile_info#:#Die temporären Datien zur PDF-Erzeugung soll im Archiv-Ordner behalten bleiben. Sie können zur Fehlersuche verwendet werden.
-min_rendering_wait#:#Minimale Wartezeit (ms)
-min_rendering_wait_info#:#Minimale Zeit in Millisekunden nach dem Laden einer HTML-Datei in PhantomJS vor ihrem Speichern als PDF. Mit diesem Intervall wird auch zyklisch getestet, ob alle Seiteninhalte geladen sind.
-max_rendering_wait#:#Maximale Wartezeit (ms)
-max_rendering_wait_info#:#Maximale Zeit in Millisekunden nach dem Laden einer HTML-Datei in PhantomJS vor ihrem Speichern als PDF. Sind alle Seiteninhalte bereits vorher geladen, wird die Zeit nicht ausgeschöpft.
-render_twice#:#Doppelte Generierung
-render_twice_info#:#Generiert jede PDF-Datei zweimal (wird überschrieben). Workaround für PhantomJS 1.9.8, um fehlende Bilder zu vermeiden.
 include_questions#:#Fragen einbinden
 include_questions_info#:#Erzeugt einen Ordner im Archiv mit den Fragen des Tests.
 include_answers#:#Antworten einbinden
@@ -128,7 +116,6 @@ embed_assets_info#:#Benötigte Bilder, Audios, Videos, Styles und JavaScript-Dat
 pdf_engine#:#PDF Generierung
 pdf_engine_none#:#Keine
 pdf_engine_none_info#:#Es werden nur HTML-Dateien erzeugt. Sie sollten dann die lokalen Medien ins Archiv einbinden, damit diese auch bei aktivem WebAccessChecker oder nach dem Löschen des Tests verfügbar sind.
-pdf_engine_phantom#:#PhantomJS (deprecated)
 pdf_engine_browsershot#:#Puppeteer auf ILIAS-Server
 bs_node_module_path#:#Node Modules
 bs_node_module_path_info#:#Pfad zum Verzeichnis node_modules der puppeteer-Installation (mit / am Ende)
