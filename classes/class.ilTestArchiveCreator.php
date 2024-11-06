@@ -3,6 +3,7 @@
 // Copyright (c) 2017 Institut fuer Lern-Innovation, Friedrich-Alexander-Universitaet Erlangen-Nuernberg, GPLv3, see LICENSE
 use ILIAS\Filesystem\Filesystem;
 use ILIAS\TestQuestionPool\QuestionInfoService;
+use ILIAS\Filesystem\Util\Archive\LegacyArchives;
 
 /**
  * Creation of test archives
@@ -13,6 +14,7 @@ class ilTestArchiveCreator
     protected ilLanguage $lng;
     protected Filesystem $storage;
     protected QuestionInfoService $question_info;
+    protected LegacyArchives $legacy_archives;
 
     public ilTestArchiveCreatorPlugin $plugin;
     public ilTestArchiveCreatorConfig $config;
@@ -51,11 +53,13 @@ class ilTestArchiveCreator
         $this->lng = $DIC->language();
         $this->storage = $DIC->filesystem()->storage();
         $this->question_info = $DIC->testQuestionPool()->questionInfo();
+        $this->legacy_archives = $DIC->legacyArchives();
 
         $this->plugin = $plugin;
         $this->config = $plugin->getConfig();
         $this->settings = $plugin->getSettings($obj_id);
         $this->filesystems = new ilTestArchiveCreatorFileSystems();
+
 
 
         $this->testObj = new ilObjTest($obj_id, false);
@@ -808,9 +812,6 @@ class ilTestArchiveCreator
 
     /**
      * Create a zip file from the working directory and store it in the export directory of the test
-     *
-     * @todo: with ILIAS 9 rewrite with this guide
-     * https://github.com/ILIAS-eLearning/ILIAS/blob/release_9/docs/development/file-handling.md#zip-and-unzip
      */
     protected function createZipFile(): void
     {
@@ -822,11 +823,12 @@ class ilTestArchiveCreator
                 $this->storage->createDir($export_dir);
             }
 
-            \ilFileUtils::zip(
+            $this->legacy_archives->zip(
                 CLIENT_DATA_DIR . '/' . $this->workdir,
                 CLIENT_DATA_DIR . '/' . $export_dir . '/' . $zip_file,
                 true
             );
+
         } catch(Exception $exception) {
             $this->errors[] = "ERROR writing $zip_file :" . $exception->getMessage();
         }
