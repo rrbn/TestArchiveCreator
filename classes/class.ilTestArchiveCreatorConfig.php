@@ -53,6 +53,9 @@ class ilTestArchiveCreatorConfig
     /** @var bool embed the asset files in the archive */
     public bool $embed_assets;
 
+    /** @var bool ignore ssl errors at pdf generation (phantomjs and browsershot) */
+    public bool $ignore_ssl_errors;
+
     /** @var string path to node_modules for browsershot */
     public string $bs_node_module_path;
 
