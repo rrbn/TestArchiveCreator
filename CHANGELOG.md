@@ -2,6 +2,14 @@
 
 Plugin versions for different ILIAS releases are provided in separate branches of this repository.
 
+## 9.0.0 for ILIAS 9 (2024-11-07)
+- compatibility with ILIAS 9.5 and higher, PHP 8.1 and 8.2 
+- removed phantomjs and its settings for PDF generation
+- renamed PDF generation option "Browsershot" to "Puppeteer on ILIAS Server"
+- updated installation instruction for puppeteer
+- applied ILIAS coding style
+- new plugin version numbering: ILIAS version . new features version . bugfix version
+
 ## 1.6.2 for ILIAS 8.11+ (2024-06-25)
 - fix cron job failure due to changed ilCtrl interface since ILIAS 8.11
 - update the link to the cron job plugin repository
