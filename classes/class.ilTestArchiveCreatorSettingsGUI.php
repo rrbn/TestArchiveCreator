@@ -349,10 +349,11 @@ class ilTestArchiveCreatorSettingsGUI
     {
         $creator = $this->plugin->getArchiveCreator($this->testObj->getId());
         if ($creator->createArchive()) {
-            $this->tpl->setOnScreenMessage('success', $this->plugin->txt('archive created'));
-        } else {
-            $this->tpl->setOnScreenMessage('failure', $this->plugin->txt('archive errors')
-            . '<br>' . implode('<br>', $creator->getErrors()));
+            $this->tpl->setOnScreenMessage('success', $this->plugin->txt('archive_created'), true);
+        }
+        if (!empty($creator->getErrors())) {
+            $this->tpl->setOnScreenMessage('failure', $this->plugin->txt('archive_errors')
+            . '<br>' . implode('<br>', $creator->getErrors()), true);
         }
         $this->returnToExport();
     }

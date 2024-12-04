@@ -12,6 +12,7 @@ abstract class ilTestArchiveCreatorElement
     protected ilTestArchiveCreatorPlugin $plugin;
     protected ilTestArchiveCreatorSettings $settings;
     protected ilTestArchiveCreatorConfig $config;
+    protected bool $has_pdf = false;
 
     /**
      * Constructor
@@ -26,6 +27,7 @@ abstract class ilTestArchiveCreatorElement
         $this->plugin = $this->creator->plugin;
         $this->settings = $this->creator->settings;
         $this->config = $this->creator->config;
+        $this->has_pdf = !empty($this->config->pdf_engine);
     }
 
     /**
@@ -64,4 +66,20 @@ abstract class ilTestArchiveCreatorElement
      * @return string[] key => content
      */
     abstract public function getRowData(string $format = 'csv'): array;
+
+    /**
+     * Set if a PDF file has been generated
+     */
+    public function getHasPdf(): bool
+    {
+        return $this->has_pdf;
+    }
+
+    /**
+     * Get if a PDF file has been generated
+     */
+    public function setHasPdf(bool $has_pdf): void
+    {
+        $this->has_pdf = $has_pdf;
+    }
 }

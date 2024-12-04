@@ -30,6 +30,9 @@ abstract class ilTestArchiveCreatorPDF
 	/** @var string time for the footer  */
 	protected string $time;
 
+    /** @var array pdf */
+    protected array $failed_files = [];
+
 	/**
 	 * constructor.
      * @param string $workdir   working directory (relative path in the storage)
@@ -113,5 +116,10 @@ abstract class ilTestArchiveCreatorPDF
 
 		$this->jobs = [];
 		$this->jobsid = '';
+        $this->failed_files = [];
 	}
+
+    public function getFailedFiles() {
+        return $this->failed_files;
+    }
 }

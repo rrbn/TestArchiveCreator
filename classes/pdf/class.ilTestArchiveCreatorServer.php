@@ -13,8 +13,8 @@ class ilTestArchiveCreatorServer extends ilTestArchiveCreatorPDF
             return;
         }
 
-        try {
-            foreach ($this->jobs as $job) {
+        foreach ($this->jobs as $job) {
+            try {
                 $header = $job['headLeft'] ?? '';
                 $footer = $job['footLeft'] ?? '';
 
@@ -55,10 +55,11 @@ class ilTestArchiveCreatorServer extends ilTestArchiveCreatorPDF
 
                 file_put_contents($job['targetFile'], $pdf);
             }
-        }
-        catch (Exception $e)
-        {
-            $this->logger->warning($e->getMessage());
+            catch (Exception $e)
+            {
+                $this->logger->error($e->getMessage());
+                $this->failed_files[] = $job['targetFile'];
+            }
         }
     }
 

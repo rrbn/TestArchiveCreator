@@ -131,6 +131,9 @@ class ilTestArchiveCreator
         // generate before list files to get the pdf hashes
         if (isset($this->pdfCreator)) {
             $this->pdfCreator->generateJobs();
+            if (!empty($this->pdfCreator->getFailedFiles())) {
+                $this->errors[] = "ERROR creating PDF files, see ILIAS log for details.";
+            }
             $this->pdfCreator->clearJobs();
         }
 
@@ -142,7 +145,7 @@ class ilTestArchiveCreator
             $this->storage->deleteDir($this->workdir . '/assets');
         }
 
-        $this->createZipFile();
+        $success = $this->createZipFile();
 
         if ($this->storage->hasDir($this->workdir) && !$this->config->keep_creation_directory) {
             $this->storage->deleteDir($this->workdir);
@@ -153,7 +156,7 @@ class ilTestArchiveCreator
         $this->settings->status = ilTestArchiveCreatorPlugin::STATUS_FINISHED;
         $this->settings->save();
 
-        return empty($this->errors);
+        return $success;
     }
 
     /**
@@ -583,9 +586,20 @@ class ilTestArchiveCreator
     {
         /** @var ilTestArchiveCreatorParticipant $participant */
         foreach ($this->participants->elements as $participant) {
-            $file = $participant->answers_file . (empty($this->config->pdf_engine) ? '.html' : '.pdf');
+            if ($this->storage->has($this->workdir . '/' . $participant->answers_file . '.pdf')) {
+                $file = $participant->answers_file . '.pdf';
+                $participant->setHasPdf(true);
+            } else {
+                $file = $participant->answers_file . '.html';
+                $participant->setHasPdf(false);
+            }
             $content = $this->storage->read($this->workdir . '/' . $file);
             $participant->answers_hash = sha1($content);
+        }
+
+        /** @var ilTestArchiveCreatorQuestion $question */
+        foreach ($this->questions->elements as $question) {
+            $question->setHasPdf($this->storage->has($this->workdir . '/' . $question->presentation . '.pdf'));
         }
 
         // questions
@@ -812,8 +826,9 @@ class ilTestArchiveCreator
 
     /**
      * Create a zip file from the working directory and store it in the export directory of the test
+     * @return bool success
      */
-    protected function createZipFile(): void
+    protected function createZipFile(): bool
     {
         $export_dir = 'tst_data/archive_exports/tst_' . $this->testObj->getId();
         $zip_file = 'test_archive_obj_' . $this->testObj->getId() . '_' . time() . '_plugin';
@@ -831,8 +846,10 @@ class ilTestArchiveCreator
 
         } catch(Exception $exception) {
             $this->errors[] = "ERROR writing $zip_file :" . $exception->getMessage();
+            return false;
         }
 
+        return true;
     }
 
     /**

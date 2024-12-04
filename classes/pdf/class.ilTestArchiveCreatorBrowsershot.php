@@ -15,19 +15,19 @@ class ilTestArchiveCreatorBrowsershot extends ilTestArchiveCreatorPDF
             return;
         }
 
-        try {
-            foreach ($this->jobs as $job) {
+        foreach ($this->jobs as $job) {
+            try {
                 $html = file_get_contents($job['sourceFile']);
 
                 $engine = Browsershot::html($html)
-                    ->setNodeModulePath($this->config->bs_node_module_path)
-                    ->setChromePath($this->config->bs_chrome_path)
-                    ->setNodeBinary($this->config->bs_node_path)
-                    ->setNpmBinary($this->config->bs_npm_path)
-                    ->waitUntilNetworkIdle(true)
-                    ->format('A4')
-                    ->margins(20,10,20,10,'mm')
-                    ->showBrowserHeaderAndFooter();
+                                     ->setNodeModulePath($this->config->bs_node_module_path)
+                                     ->setChromePath($this->config->bs_chrome_path)
+                                     ->setNodeBinary($this->config->bs_node_path)
+                                     ->setNpmBinary($this->config->bs_npm_path)
+                                     ->waitUntilNetworkIdle(true)
+                                     ->format('A4')
+                                     ->margins(20,10,20,10,'mm')
+                                     ->showBrowserHeaderAndFooter();
 
                 if ($this->config->ignore_ssl_errors) {
                     $engine->ignoreHttpsErrors();
@@ -52,16 +52,17 @@ class ilTestArchiveCreatorBrowsershot extends ilTestArchiveCreatorPDF
                     .'</p>');
                 $engine->footerHtml(
                     '<p style="font-size:10pt; padding-left:20mm;margin-top:5mm;">' .
-                        '<span class="pageNumber"></span> / <span class="totalPages"></span> - '
-                        . $footer
-                        . '</p>'
+                    '<span class="pageNumber"></span> / <span class="totalPages"></span> - '
+                    . $footer
+                    . '</p>'
                 );
                 $engine->save($job['targetFile']);
             }
-        }
-        catch (Exception $e)
-        {
-            $this->logger->warning($e->getMessage());
+            catch (Exception $e)
+            {
+                $this->logger->error($e->getMessage());
+                $this->failed_files[] = $job['targetFile'];
+            }
         }
     }
 }

@@ -85,7 +85,7 @@ class ilTestArchiveCreatorParticipant extends ilTestArchiveCreatorElement
     public function getLinkedLabels(): array
     {
         return array(
-            'answers_file' => empty($this->config->pdf_engine) ? 'HTML' : 'PDF'
+            'answers_file' => $this->has_pdf ? 'PDF' : 'HTML'
         );
     }
 
@@ -109,7 +109,7 @@ class ilTestArchiveCreatorParticipant extends ilTestArchiveCreatorElement
             'pass_finish_date' => $format == 'csv' ? $pass_finish_date->get(IL_CAL_DATETIME) : ilDatePresentation::formatDate($pass_finish_date),
             'pass_working_time' => $format == 'csv' ? $this->pass_working_time : ilDatePresentation::secondsToString($this->pass_working_time),
             'pass_reached_points' => $this->pass_reached_points,
-            'answers_file' => $this->answers_file . (empty($this->config->pdf_engine) ? '.html' : '.pdf'),
+            'answers_file' => $this->answers_file . ($this->has_pdf ? '.pdf' : '.html'),
             'answers_hash' => $this->answers_hash,
         );
     }

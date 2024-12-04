@@ -70,7 +70,7 @@ class ilTestArchiveCreatorQuestion extends ilTestArchiveCreatorElement
      */
     public function getLinkedLabels(): array
     {
-        $label = empty($this->config->pdf_engine) ? 'HTML' : 'PDF';
+        $label = $this->has_pdf ? 'PDF' : 'HTML';
 
         return array(
             'presentation' => $label,
@@ -90,10 +90,10 @@ class ilTestArchiveCreatorQuestion extends ilTestArchiveCreatorElement
             'title' => $this->title,
             'type' => $this->type,
             'max_points' => $this->max_points,
-            'presentation' => $this->presentation . (empty($this->config->pdf_engine) ? '.html' : '.pdf'),
+            'presentation' => $this->presentation . ($this->has_pdf ? '.pdf' : '.html'),
         );
         if ($this->settings->questions_with_best_solution) {
-            $row['best_solution'] = $this->best_solution . (empty($this->config->pdf_engine) ? '.html' : '.pdf');
+            $row['best_solution'] = $this->best_solution . ($this->has_pdf ? '.pdf' : '.html');
         }
 
         return $row;
