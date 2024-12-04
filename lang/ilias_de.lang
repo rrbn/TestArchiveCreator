@@ -144,5 +144,5 @@ log_question#:#Frage
 log_logtext#:#Protokolleintrag
 pdf_engine_server#:#Puppeteer auf separatem Server
 server_url#:#Url
-server_url_info#:#Url eines Servers der zur PDF-Generierung aufgerufen wird. Eine Beispiel-Implementierung ist https://github.com/fneumann/tarc-pdf
+server_url_info#:#Url des Servers zur PDF-Generierung. Siehe <a href="https://github.com/DatabayAG/tarc-pdf">PDF-Generierungs-Server mit Puppeteer</a>
 pdf_engine_browsershot_info#:#Siehe <a href="./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/TestArchiveCreator/docs/install-puppeteer-local.md">Puppeteer-Installation</a>
