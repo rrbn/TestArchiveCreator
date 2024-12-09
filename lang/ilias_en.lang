@@ -146,3 +146,4 @@ server_url_info#:#Url of the PDF generation server. See <a href="https://github.
 pdf_engine_browsershot_info#:#See <a href="./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/TestArchiveCreator/docs/install-puppeteer-local.md">Puppeteer-Installation</a>
 archive_errors#:#Errors occurred at archive creation:
 archive_created#:#The archive was successfully created.
+git_info#:#Git Information

@@ -15,6 +15,9 @@ class ilTestArchiveCreator
     protected Filesystem $storage;
     protected QuestionInfoService $question_info;
     protected LegacyArchives $legacy_archives;
+    protected ilSetting $ilias_settings;
+    protected ilIniFile $client_ini;
+    protected ilVersionControlInformation $git_info;
 
     public ilTestArchiveCreatorPlugin $plugin;
     public ilTestArchiveCreatorConfig $config;
@@ -54,6 +57,9 @@ class ilTestArchiveCreator
         $this->storage = $DIC->filesystem()->storage();
         $this->question_info = $DIC->testQuestionPool()->questionInfo();
         $this->legacy_archives = $DIC->legacyArchives();
+        $this->ilias_settings = $DIC->settings();
+        $this->client_ini = $DIC->clientIni();
+        $this->git_info = new ilGitInformation();
 
         $this->plugin = $plugin;
         $this->config = $plugin->getConfig();
@@ -80,7 +86,7 @@ class ilTestArchiveCreator
         $this->htmlCreator = new ilTestArchiveCreatorHTML($this->plugin, $this->settings);
         $this->assetsProcessor = new ilTestArchiveCreatorAssets($this->assets, $this->workdir, $this->plugin->getAssetsUrl($this->testObj->getId()));
 
-        switch($this->config->pdf_engine) {
+        switch ($this->config->pdf_engine) {
             case ilTestArchiveCreatorConfig::ENGINE_BROWSERSHOT:
                 $this->pdfCreator = new ilTestArchiveCreatorBrowsershot($this->plugin, $this->settings, $this->workdir);
                 break;
@@ -109,6 +115,7 @@ class ilTestArchiveCreator
             $this->storage->deleteDir($this->workdir);
         }
 
+        $this->handleServerData();
         $this->handleSettings();
         $this->handleIntroduction();
 
@@ -166,6 +173,7 @@ class ilTestArchiveCreator
     {
         $tpl = $this->plugin->getTemplate('tpl.main_index.html');
         $tpl->setVariable('TXT_TEST_ARCHIVE', $this->plugin->txt('test_archive'));
+        $tpl->setVariable('TXT_SERVER_HTML', $this->lng->txt('server_data'). ' (HTML)');
         $tpl->setVariable('TXT_SETTINGS_HTML', $this->plugin->txt('settings_html'));
         $tpl->setVariable('TXT_INTRODUCTION_HTML', $this->plugin->txt('introduction_html'));
 
@@ -190,6 +198,34 @@ class ilTestArchiveCreator
         $tpl->setVariable('VAL_GENERATED', ilDatePresentation::formatDate(new ilDateTime(time(), IL_CAL_UNIX)));
 
         $this->createIndex('index.html', $tpl->get());
+    }
+
+    /**
+     * Add the server data
+     */
+    protected function handleServerData(): void
+    {
+        $this->lng->loadLanguageModule('administration');
+
+        $info = array();
+        $info[$this->lng->txt("inst_name")] = $this->client_ini->readVariable("client", "name");
+        $info[$this->lng->txt("description")] = $this->client_ini->readVariable("client", "description");
+        $info[$this->lng->txt("client_id")] = CLIENT_ID;
+        $info[$this->lng->txt("inst_id")] = $this->ilias_settings->get("inst_id");
+        $info[$this->lng->txt("ilias_version")] = ILIAS_VERSION;
+        $info[$this->plugin->txt("git_info")] = $this->git_info->getInformationAsHtml();
+
+        // fill the template
+        $tpl = $this->plugin->getTemplate('tpl.settings.html');
+        foreach ($info as $label => $content) {
+            $tpl->setCurrentBlock('data_row');
+            $tpl->setVariable('LABEL', $label);
+            $tpl->setVariable('CONTENT', $content);
+            $tpl->parseCurrentBlock();
+        }
+        $tpl->setVariable('TXT_SETTINGS', $this->lng->txt('server_data'));
+
+        $this->createIndex('server.html', $tpl->get());
     }
 
     /**
@@ -412,7 +448,7 @@ class ilTestArchiveCreator
                 $user = new ilObjUser($userdata->getUserID());
 
                 // pass selection
-                switch($this->settings->pass_selection) {
+                switch ($this->settings->pass_selection) {
                     case ilTestArchiveCreatorPlugin::PASS_ALL:
                         $passes = $userdata->getPasses();
                         break;
@@ -638,7 +674,7 @@ class ilTestArchiveCreator
             /** @var  ilTestEvaluationUserData $userdata */
             foreach ($participants as $active_id => $userdata) {
                 if (is_object($userdata) && is_array($userdata->getPasses())) {
-                    switch($this->settings->pass_selection) {
+                    switch ($this->settings->pass_selection) {
                         case ilTestArchiveCreatorPlugin::PASS_ALL:
                             $passes = $userdata->getPasses();
                             break;
@@ -701,8 +737,8 @@ class ilTestArchiveCreator
 
         $questions = array();
         $result_array = $this->testObj->getTestResult($active_id, $pass, false);
-        foreach($result_array as $key => $data) {
-            if($key === 'test' || $key === 'pass') {
+        foreach ($result_array as $key => $data) {
+            if ($key === 'test' || $key === 'pass') {
                 continue;
             }
 
@@ -819,7 +855,7 @@ class ilTestArchiveCreator
                 $this->storage->delete($path);
             }
             $this->storage->write($path, $content);
-        } catch(Exception $exception) {
+        } catch (Exception $exception) {
             $this->errors[] = "ERROR writing $file :" . $exception->getMessage();
         }
     }
@@ -844,7 +880,7 @@ class ilTestArchiveCreator
                 true
             );
 
-        } catch(Exception $exception) {
+        } catch (Exception $exception) {
             $this->errors[] = "ERROR writing $zip_file :" . $exception->getMessage();
             return false;
         }
