@@ -2,10 +2,13 @@
 
 Plugin versions for different ILIAS releases are provided in separate branches of this repository.
 
+## 9.1.0 for ILIAS 9 (2024-12-09)
+- Feature: add an HTML file with server info to the archive
+- Fix: avoid dependency conflicts with SOAP authentication
+
 ## 9.0.1 for ILIAS 9 (2024-12-04)
 - Update GitHub address for the PDF server
 - Add fault tolerance for failed PDF creation
-
 
 ## 9.0.0 for ILIAS 9 (2024-11-07)
 - compatibility with ILIAS 9.5 and higher, PHP 8.1 and 8.2 
