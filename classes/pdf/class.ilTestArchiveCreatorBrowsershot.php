@@ -4,16 +4,22 @@ use \Spatie\Browsershot\Browsershot;
 
 class ilTestArchiveCreatorBrowsershot extends ilTestArchiveCreatorPDF
 {
+    protected function initDependencies()
+    {
+        require_once __DIR__ . '/../../vendor/autoload.php';
+    }
+
     /**
      * Generate the added batch files as PDF in one-step
      * PDF rendering is done at this step
      */
     public function generateJobs() : void
     {
-        if (empty($this->jobs))
-        {
+        if (empty($this->jobs)) {
             return;
         }
+
+        $this->initDependencies();
 
         foreach ($this->jobs as $job) {
             try {

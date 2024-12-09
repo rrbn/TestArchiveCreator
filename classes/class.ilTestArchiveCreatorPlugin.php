@@ -35,12 +35,6 @@ class ilTestArchiveCreatorPlugin extends ilUserInterfaceHookPlugin
     protected $settings = [];
 
 
-    public function init(): void
-    {
-        parent::init();
-        require_once __DIR__ . '/../vendor/autoload.php';
-    }
-
     /**
      * Get the plugin name
      * @return string
