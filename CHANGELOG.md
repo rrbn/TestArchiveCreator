@@ -2,6 +2,9 @@
 
 Plugin versions for different ILIAS releases are provided in separate branches of this repository.
 
+## 9.2.0 for ILIAS 9 (2004-12-16)
+- Fix: replace browsershot with direct call of puppeteer
+
 ## 9.1.0 for ILIAS 9 (2024-12-09)
 - Feature: add an HTML file with server info to the archive
 - Fix: avoid dependency conflicts with SOAP authentication

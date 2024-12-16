@@ -93,7 +93,6 @@ class ilTestArchiveCreatorConfigGUI extends ilPluginConfigGUI
         $this->config->bs_node_module_path = $form->getInput('bs_node_module_path');
         $this->config->bs_chrome_path = $form->getInput('bs_chrome_path');
         $this->config->bs_node_path = $form->getInput('bs_node_path');
-        $this->config->bs_npm_path = $form->getInput('bs_npm_path');
 
         $this->config->server_url = $form->getInput('server_url');
 
@@ -167,35 +166,31 @@ class ilTestArchiveCreatorConfigGUI extends ilPluginConfigGUI
         $none->setInfo($this->plugin->txt('pdf_engine_none_info'));
         $engine->addOption($none);
 
-        // Local Puppeteer via Browsershot
+        // Local Puppeteer
 
-        $browsershot = new ilRadioOption($this->plugin->txt('pdf_engine_browsershot'), ilTestArchiveCreatorConfig::ENGINE_BROWSERSHOT);
-        $browsershot->setInfo($this->plugin->txt('pdf_engine_browsershot_info'));
-        $engine->addOption($browsershot);
+        $local = new ilRadioOption($this->plugin->txt('pdf_engine_browsershot'), ilTestArchiveCreatorConfig::ENGINE_LOCAL);
+        $local->setInfo($this->plugin->txt('pdf_engine_local_info'));
+        $engine->addOption($local);
 
         $path = new ilTextInputGUI($this->plugin->txt('bs_node_module_path'), 'bs_node_module_path');
         $path->setInfo($this->plugin->txt('bs_node_module_path_info'));
         $path->setValue($this->config->bs_node_module_path);
-        $browsershot->addSubItem($path);
+        $local->addSubItem($path);
 
         $path = new ilTextInputGUI($this->plugin->txt('bs_chrome_path'), 'bs_chrome_path');
         $path->setInfo($this->plugin->txt('bs_chrome_path_info'));
         $path->setValue($this->config->bs_chrome_path);
-        $browsershot->addSubItem($path);
+        $local->addSubItem($path);
 
         $path = new ilTextInputGUI($this->plugin->txt('bs_node_path'), 'bs_node_path');
         $path->setInfo($this->plugin->txt('bs_node_path_info'));
         $path->setValue($this->config->bs_node_path);
-        $browsershot->addSubItem($path);
-
-        $path = new ilTextInputGUI($this->plugin->txt('bs_npm_path'), 'bs_npm_path');
-        $path->setInfo($this->plugin->txt('bs_npm_path_info'));
-        $path->setValue($this->config->bs_npm_path);
-        $browsershot->addSubItem($path);
+        $local->addSubItem($path);
 
         // Remote Puppeteer Server
 
         $server = new ilRadioOption($this->plugin->txt('pdf_engine_server'), ilTestArchiveCreatorConfig::ENGINE_SERVER);
+        $server->setInfo($this->plugin->txt('pdf_engine_server_info'));
         $engine->addOption($server);
 
         $url = new ilTextInputGUI($this->plugin->txt('server_url'), 'server_url');
