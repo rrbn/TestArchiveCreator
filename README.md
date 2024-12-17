@@ -11,7 +11,7 @@ This plugin for the LMS ILIAS open source allows the creation of zipped archives
 The actual PDF rendering is done by a headless browser which has to be installed in the web server. Corrently the plugin supports two renderers:
 
 * Puppeteer on the ILIAS server, see [Installation](./docs/install-puppeteer-local.md)
-* Puppeteer on a separate Server, see this [Server Script](https://github.com/fneumann/tarc-pdf)
+* Puppeteer on a separate Server, see this [Server Script](https://github.com/DatabayAG/tarc-pdf)
 
 ## Issues
 
@@ -23,12 +23,11 @@ Please use the official ILIAS bug tracker "Mantis" for bug reporting: https://ma
 
 1. Put the content of the plugin directory in a subdirectory under your ILIAS main directory:
 `Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/TestArchiveCreator`
-2. Move to the plugin directory and call `composer install --no-dev`. You should do this after each update.
-3. Move to the base directory of your ILIAS and run `composer du` to reload the current plugin version
-4. Open Administration > Extending ILIAS > Plugins
-5. Install and activate the plugin
-6. Open the plugin configuration
-7. Edit the plugin configuration and enter at least the server paths of the chosen renderer.
+2. Move to the base directory of your ILIAS and run `composer du` to reload the current plugin version
+3. Open Administration > Extending ILIAS > Plugins
+4. Install and activate the plugin
+5. Open the plugin configuration
+6. Edit the plugin configuration and enter at least the server paths of the chosen renderer.
 
 
 ## Usage

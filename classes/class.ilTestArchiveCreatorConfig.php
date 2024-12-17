@@ -12,8 +12,7 @@ class ilTestArchiveCreatorConfig
     public const ALLOW_NONE = 'none';
 
     public const ENGINE_NONE = '';
-    public const ENGINE_PHANTOM = 'phantom';
-    public const ENGINE_BROWSERSHOT = 'browsershot';
+    public const ENGINE_LOCAL = 'browsershot';
     public const ENGINE_SERVER = 'server';
 
 

@@ -87,8 +87,8 @@ class ilTestArchiveCreator
         $this->assetsProcessor = new ilTestArchiveCreatorAssets($this->assets, $this->workdir, $this->plugin->getAssetsUrl($this->testObj->getId()));
 
         switch ($this->config->pdf_engine) {
-            case ilTestArchiveCreatorConfig::ENGINE_BROWSERSHOT:
-                $this->pdfCreator = new ilTestArchiveCreatorBrowsershot($this->plugin, $this->settings, $this->workdir);
+            case ilTestArchiveCreatorConfig::ENGINE_LOCAL:
+                $this->pdfCreator = new ilTestArchiveCreatorLocal($this->plugin, $this->settings, $this->workdir);
                 break;
 
             case ilTestArchiveCreatorConfig::ENGINE_SERVER:
@@ -173,7 +173,7 @@ class ilTestArchiveCreator
     {
         $tpl = $this->plugin->getTemplate('tpl.main_index.html');
         $tpl->setVariable('TXT_TEST_ARCHIVE', $this->plugin->txt('test_archive'));
-        $tpl->setVariable('TXT_SERVER_HTML', $this->lng->txt('server_data'). ' (HTML)');
+        $tpl->setVariable('TXT_SERVER_HTML', $this->lng->txt('server_data') . ' (HTML)');
         $tpl->setVariable('TXT_SETTINGS_HTML', $this->plugin->txt('settings_html'));
         $tpl->setVariable('TXT_INTRODUCTION_HTML', $this->plugin->txt('introduction_html'));
 

@@ -142,8 +142,9 @@ log_question#:#Question
 log_logtext#:#Log Text
 pdf_engine_server#:#Puppeteer on Separate Server
 server_url#:#Url
-server_url_info#:#Url of the PDF generation server. See <a href="https://github.com/DatabayAG/tarc-pdf">PDF Generation Server with Puppeteer</a>
-pdf_engine_browsershot_info#:#See <a href="./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/TestArchiveCreator/docs/install-puppeteer-local.md">Puppeteer-Installation</a>
+server_url_info#:#Url of the PDF generation server.
+pdf_engine_server_info#:#For production environments. See <a href="https://github.com/DatabayAG/tarc-pdf">PDF Generation Server with Puppeteer</a>
+pdf_engine_local_info#:#For test installations. See <a href="./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/TestArchiveCreator/docs/install-puppeteer-local.md">Puppeteer-Installation</a>
 archive_errors#:#Errors occurred at archive creation:
 archive_created#:#The archive was successfully created.
 git_info#:#Git Information

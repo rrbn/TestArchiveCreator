@@ -41,11 +41,6 @@ Now go to the plugin configuration in ILIAS and choose *Puppeteer on ILIAS Serve
 /usr/bin/node
 ````
 
-**Npm** (path may be different on  other distributions)
-````
-/usr/bin/npm
-````
-
 Run the archive creation for a test. If an error occurs or no PDF file is created, look at the ILIAS log for details.
 
 
