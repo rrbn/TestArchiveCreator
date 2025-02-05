@@ -73,6 +73,8 @@ with_login#:#User Names
 with_login_info#:#Adds the ILIAS user names to the files in the archive.
 with_matriculation#:#Matriculation
 with_matriculation_info#:#Adds the matriculation numbers to the files in the archive.
+with_results#:#Test Results
+with_results_info#:#Adds an export of test results as .csv und .xslx files.
 object_defaults#:#Default Settings for Test Objects
 random_questions#:#Questions of Random Test
 random_questions_all#:#Add all questions

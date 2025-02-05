@@ -73,6 +73,8 @@ with_login#:#Benutzernamen
 with_login_info#:#Trägt die ILIAS-Benutzernamen in den Ausgabedateien des Archivs ein.
 with_matriculation#:#Matrikelnummern
 with_matriculation_info#:#Trägt die Matrikelnummern in den Ausgabedateien des Archivs ein.
+with_results#:#Testergebnisse
+with_results_info#:#Bindet einen Export der Testergebnisse als .csv- und .xslx-Dateien ein.
 object_defaults#:#Standard-Einstellungen für Tests
 random_questions#:#Fragen im Zufallstest
 random_questions_all#:#Alle Fragen aufnehmen

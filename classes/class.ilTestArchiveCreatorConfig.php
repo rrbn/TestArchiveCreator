@@ -43,6 +43,9 @@ class ilTestArchiveCreatorConfig
 	/** @var  bool include the user matriculation number in the archive */
 	public bool $with_matriculation;
 
+    /** @var  bool include an export of test results as .csv und .xslx files */
+    public bool $with_results;
+
 	/** @var  bool hide the standard test archive in the export menu */
 	public bool $hide_standard_archive;
 
@@ -152,6 +155,7 @@ class ilTestArchiveCreatorConfig
 
 		$this->with_login = (bool) $this->settings->get('with_login', true);
 		$this->with_matriculation = (bool) $this->settings->get('with_matriculation', true);
+        $this->with_results = (bool) $this->settings->get('with_results', true);
         $this->include_test_log = (bool) $this->settings->get('include_test_log', true);
         $this->include_examination_protocol = (bool) $this->settings->get('include_examination_protocol', true);
 
@@ -197,6 +201,7 @@ class ilTestArchiveCreatorConfig
 
 		$this->settings->set('with_login', (bool) $this->with_login ? '1' : '0');
 		$this->settings->set('with_matriculation', (bool) $this->with_matriculation ? '1' : '0');
+        $this->settings->set('with_results', (bool) $this->with_results ? '1' : '0');
         $this->settings->set('include_test_log', (bool) $this->include_test_log ? '1' : '0');
         $this->settings->set('include_examination_protocol', (bool) $this->include_examination_protocol ? '1' : '0');
 
