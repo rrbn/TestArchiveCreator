@@ -1,6 +1,7 @@
 <?php
 // Copyright (c) 2017 Institut fuer Lern-Innovation, Friedrich-Alexander-Universitaet Erlangen-Nuernberg, GPLv3, see LICENSE
 use ILIAS\Filesystem\Filesystem;
+use classes\ilTestArchiveCreatorTest;
 
 /**
  * Creation of test archives
@@ -53,7 +54,7 @@ class ilTestArchiveCreator
 		$this->settings = $plugin->getSettings($obj_id);
         $this->filesystems = new ilTestArchiveCreatorFileSystems();
 
-		$this->testObj = new ilObjTest($obj_id, false);
+		$this->testObj = new ilTestArchiveCreatorTest($obj_id, false);
         $this->workdir = $this->plugin->getWorkdir($this->testObj->getId());
 
         $this->questions = new ilTestArchiveCreatorList($this, new ilTestArchiveCreatorQuestion($this));
@@ -105,6 +106,10 @@ class ilTestArchiveCreator
         }
 
 		$this->handleSettings();
+
+        if ($this->config->with_results) {
+            $this->handleResults();
+        }
 
         if ($this->config->include_test_log && $this->plugin->isTestLogActive()) {
             $this->handleTestLog();
@@ -230,6 +235,22 @@ class ilTestArchiveCreator
 
         $this->createIndex('settings.html',  $tpl->get());
 	}
+
+    /**
+     * Write the result export files
+     */
+    protected function handleResults() : void
+    {
+        $expFactory = new ilTestExportFactory($this->testObj);
+        $test_exp = $expFactory->getExporter('results');
+        $export_file = $test_exp->buildExportFile();
+
+        $fs = $this->filesystems->deriveFilesystemFrom($export_file);
+        $path = $this->filesystems->createRelativePath($export_file);
+
+        $this->createFile('results.csv', $fs->read($path));
+        $this->createFile('results.xlsx', $fs->read(dirname($path) . '/' . basename($path, '.csv') . '.xlsx'));
+    }
 
     /**
      * Add the test log to the archive
