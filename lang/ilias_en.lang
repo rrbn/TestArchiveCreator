@@ -71,6 +71,8 @@ with_login#:#User Names
 with_login_info#:#Adds the ILIAS user names to the files in the archive.
 with_matriculation#:#Matriculation
 with_matriculation_info#:#Adds the matriculation numbers to the files in the archive.
+with_results#:#Test Results
+with_results_info#:#Adds an export of test results as .csv und .xslx files.
 object_defaults#:#Default Settings for Test Objects
 random_questions#:#Questions of Random Test
 random_questions_all#:#Add all questions
@@ -87,6 +89,8 @@ participants_csv#:#Participants (CSV)
 participants_html#:#Participants (HTML)
 settings_html#:#Test Settings (HTML)
 introduction_html#:#Introduction (HTML)
+test_results_csv#:#Test Results (CSV)
+test_results_xlsx#:#Test Results (MS Excel)
 test_archive#:#Test Archive
 ignore_ssl_errors#:#Ignore SSL Errors
 ignore_ssl_errors_info#:#Ignore SSL certificate errors for loading of images, styles or scripts.

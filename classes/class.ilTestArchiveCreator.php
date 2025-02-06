@@ -4,6 +4,7 @@
 use ILIAS\Filesystem\Filesystem;
 use ILIAS\TestQuestionPool\QuestionInfoService;
 use ILIAS\Filesystem\Util\Archive\LegacyArchives;
+use classes\ilTestArchiveCreatorTest;
 
 /**
  * Creation of test archives
@@ -33,6 +34,7 @@ class ilTestArchiveCreator
     protected ilTestArchiveCreatorList $assets;
     protected ilTestArchiveCreatorList $testlog;
 
+    protected $obj_id;
     public ilObjTest $testObj;
 
     /** @var string relative path of the working directory in the storage */
@@ -66,8 +68,7 @@ class ilTestArchiveCreator
         $this->settings = $plugin->getSettings($obj_id);
         $this->filesystems = new ilTestArchiveCreatorFileSystems();
 
-
-
+        $this->obj_id = $obj_id;
         $this->testObj = new ilObjTest($obj_id, false);
         $this->workdir = $this->plugin->getWorkdir($this->testObj->getId());
 
@@ -118,6 +119,10 @@ class ilTestArchiveCreator
         $this->handleServerData();
         $this->handleSettings();
         $this->handleIntroduction();
+
+        if ($this->config->with_results) {
+            $this->handleResults();
+        }
 
         if ($this->config->include_test_log && $this->plugin->isTestLogActive()) {
             $this->handleTestLog();
@@ -184,6 +189,11 @@ class ilTestArchiveCreator
 
         if ($this->storage->has($this->workdir . '/examination_protocol.html')) {
             $tpl->setVariable('TXT_EXAMINATION_PROTOCOL_HTML', $this->plugin->txt('examination_protocol_html'));
+        }
+
+        if ($this->storage->has($this->workdir . '/results.csv')) {
+            $tpl->setVariable('TXT_TEST_RESULTS_XLSX', $this->plugin->txt('test_results_xlsx'));
+            $tpl->setVariable('TXT_TEST_RESULTS_CSV', $this->plugin->txt('test_results_csv'));
         }
 
         if ($this->settings->include_questions) {
@@ -295,6 +305,38 @@ class ilTestArchiveCreator
         $head_right = '';
 
         $this->createContent($file, $title, $description, $content, $head_left, $head_right);
+    }
+
+    /**
+     * Write the result export files
+     */
+    protected function handleResults(): void
+    {
+        // we need to create new test objects
+        // otherwise the first generation causes empty results in the second
+
+        $data = (new ilCSVTestExport(
+            (new ilTestArchiveCreatorTest($this->obj_id, false)),
+            ilTestEvaluationData::FILTER_BY_NONE,
+            '',
+            false,
+            false
+        ))
+            ->withAllResults()
+            ->getContent();
+        $this->createFile('results.csv', $data);
+
+        $worksheet = (new ilExcelTestExport(
+            (new ilTestArchiveCreatorTest($this->obj_id, false)),
+            ilTestEvaluationData::FILTER_BY_NONE,
+            '',
+            false,
+            false
+        ))
+            ->withResultsPage()
+            ->withUserPages()
+            ->getContent();
+        $worksheet->writeToFile(CLIENT_DATA_DIR . '/' . $this->workdir . '/results.xlsx');
     }
 
     /**

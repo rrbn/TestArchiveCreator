@@ -98,6 +98,7 @@ class ilTestArchiveCreatorConfigGUI extends ilPluginConfigGUI
 
         $this->config->with_login = $form->getInput('with_login');
         $this->config->with_matriculation = $form->getInput('with_matriculation');
+        $this->config->with_results = $form->getInput('with_results');
         if ($this->plugin->isTestLogActive()) {
             $this->config->include_test_log = $form->getInput('include_test_log');
         }
@@ -277,6 +278,11 @@ class ilTestArchiveCreatorConfigGUI extends ilPluginConfigGUI
         $with_matriculation->setInfo($this->plugin->txt('with_matriculation_info'));
         $with_matriculation->setChecked($this->config->with_matriculation);
         $form->addItem($with_matriculation);
+
+        $with_results = new ilCheckboxInputGUI($this->plugin->txt('with_results'), 'with_results');
+        $with_results->setInfo($this->plugin->txt('with_results_info'));
+        $with_results->setChecked($this->config->with_results);
+        $form->addItem($with_results);
 
         $include_test_log = new ilCheckboxInputGUI($this->plugin->txt('include_test_log'), 'include_test_log');
         $include_test_log->setInfo($this->plugin->txt('include_test_log_info'));

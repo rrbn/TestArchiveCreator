@@ -71,6 +71,8 @@ with_login#:#Benutzernamen
 with_login_info#:#Trägt die ILIAS-Benutzernamen in den Ausgabedateien des Archivs ein.
 with_matriculation#:#Matrikelnummern
 with_matriculation_info#:#Trägt die Matrikelnummern in den Ausgabedateien des Archivs ein.
+with_results#:#Testergebnisse
+with_results_info#:#Bindet einen Export der Testergebnisse als .csv- und .xslx-Dateien ein.
 object_defaults#:#Standard-Einstellungen für Tests
 random_questions#:#Fragen im Zufallstest
 random_questions_all#:#Alle Fragen aufnehmen
@@ -87,6 +89,8 @@ participants_csv#:#Teilnehmer*innen (CSV)
 participants_html#:#Teilnehmer*innen (HTML)
 settings_html#:#Test-Einstellungen (HTML)
 introduction_html#:#Einleitung (HTML)
+test_results_csv#:#Testergebnisse (CSV)
+test_results_xlsx#:#Testergebnisse (MS Excel)
 test_archive#:#Test-Archiv
 ignore_ssl_errors#:#SSL-Fehler ignorieren
 ignore_ssl_errors_info#:#Ignoriert SSL-Zertifikatsfehler beim Laden von eingebetteten Bildern, Styles und Skripten.
