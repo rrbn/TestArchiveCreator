@@ -2,7 +2,10 @@
 
 Plugin versions for different ILIAS releases are provided in separate branches of this repository.
 
-## 9.2.0 for ILIAS 9 (2004-12-16)
+## 9.3.0 for ILIAS 9 (2025-01-06)
+- Feature: optionally add test result files to the archive
+
+## 9.2.0 for ILIAS 9 (2024-12-16)
 - Fix: replace browsershot with direct call of puppeteer
 
 ## 9.1.0 for ILIAS 9 (2024-12-09)
