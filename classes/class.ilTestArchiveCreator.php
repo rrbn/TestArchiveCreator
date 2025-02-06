@@ -173,6 +173,11 @@ class ilTestArchiveCreator
             $tpl->setVariable('TXT_EXAMINATION_PROTOCOL_HTML', $this->plugin->txt('examination_protocol_html'));
         }
 
+        if ($this->storage->has($this->workdir . '/results.csv')) {
+            $tpl->setVariable('TXT_TEST_RESULTS_XLSX', $this->plugin->txt('test_results_xlsx'));
+            $tpl->setVariable('TXT_TEST_RESULTS_CSV', $this->plugin->txt('test_results_csv'));
+        }
+
 		if ($this->settings->include_questions) {
             $tpl->setVariable('TXT_QUESTIONS_HTML', $this->plugin->txt('questions_html'));
             $tpl->setVariable('TXT_QUESTIONS_CSV', $this->plugin->txt('questions_csv'));
@@ -246,10 +251,15 @@ class ilTestArchiveCreator
         $export_file = $test_exp->buildExportFile();
 
         $fs = $this->filesystems->deriveFilesystemFrom($export_file);
-        $path = $this->filesystems->createRelativePath($export_file);
 
-        $this->createFile('results.csv', $fs->read($path));
-        $this->createFile('results.xlsx', $fs->read(dirname($path) . '/' . basename($path, '.csv') . '.xlsx'));
+        $csv = $this->filesystems->createRelativePath($export_file);
+        $xlsx = dirname($csv) . '/' . basename($csv, '.csv') . '.xlsx';
+
+        $this->createFile('results.csv', $fs->read($csv));
+        $this->createFile('results.xlsx', $fs->read($xlsx));
+
+        $fs->delete($csv);
+        $fs->delete($xlsx);
     }
 
     /**
