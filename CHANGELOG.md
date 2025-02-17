@@ -2,6 +2,9 @@
 
 Plugin versions for different ILIAS releases are provided in separate branches of this repository.
 
+## 9.3.1 for ILIAS 9 (2025-02-27)
+- Fix: allow archive creation for tests with deleted user accounts
+
 ## 9.3.0 for ILIAS 9 (2025-01-06)
 - Feature: optionally add test result files to the archive
 

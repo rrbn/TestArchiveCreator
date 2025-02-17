@@ -154,3 +154,4 @@ pdf_engine_local_info#:#Für Testinstallationen. Siehe <a href="./Customizing/gl
 archive_errors#:#Beim Erstellen des Archivs sind Fehler aufgetreten:
 archive_created#:#Das Archiv wurde erstellt.
 git_info#:#Git-Informationen
+deleted_account#:#Gelöschtes Konto

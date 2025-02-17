@@ -152,3 +152,4 @@ pdf_engine_local_info#:#For test installations. See <a href="./Customizing/globa
 archive_errors#:#Errors occurred at archive creation:
 archive_created#:#The archive was successfully created.
 git_info#:#Git Information
+deleted_account#:#Deleted Account

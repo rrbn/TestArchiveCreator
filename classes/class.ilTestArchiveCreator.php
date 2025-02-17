@@ -4,7 +4,6 @@
 use ILIAS\Filesystem\Filesystem;
 use ILIAS\TestQuestionPool\QuestionInfoService;
 use ILIAS\Filesystem\Util\Archive\LegacyArchives;
-use classes\ilTestArchiveCreatorTest;
 
 /**
  * Creation of test archives
@@ -69,7 +68,7 @@ class ilTestArchiveCreator
         $this->filesystems = new ilTestArchiveCreatorFileSystems();
 
         $this->obj_id = $obj_id;
-        $this->testObj = new ilObjTest($obj_id, false);
+        $this->testObj = new ilTestArchiveCreatorTest($obj_id, false, 0);
         $this->workdir = $this->plugin->getWorkdir($this->testObj->getId());
 
         $this->questions = new ilTestArchiveCreatorList($this, new ilTestArchiveCreatorQuestion($this));
@@ -314,9 +313,10 @@ class ilTestArchiveCreator
     {
         // we need to create new test objects
         // otherwise the first generation causes empty results in the second
+        // ANONYMOUS_USED_ID needed to prevent error with deleted accounts
 
         $data = (new ilCSVTestExport(
-            (new ilTestArchiveCreatorTest($this->obj_id, false)),
+            (new ilTestArchiveCreatorTest($this->obj_id, false, ANONYMOUS_USER_ID)),
             ilTestEvaluationData::FILTER_BY_NONE,
             '',
             false,
@@ -327,7 +327,7 @@ class ilTestArchiveCreator
         $this->createFile('results.csv', $data);
 
         $worksheet = (new ilExcelTestExport(
-            (new ilTestArchiveCreatorTest($this->obj_id, false)),
+            (new ilTestArchiveCreatorTest($this->obj_id, false, ANONYMOUS_USER_ID)),
             ilTestEvaluationData::FILTER_BY_NONE,
             '',
             false,
@@ -487,7 +487,10 @@ class ilTestArchiveCreator
         $participants = $this->testObj->getUnfilteredEvaluationData()->getParticipants();
         foreach ($participants as $active_id => $userdata) {
             if (is_object($userdata) && is_array($userdata->getPasses())) {
-                $user = new ilObjUser($userdata->getUserID());
+                $user = new ilObjUser($userdata->getUserID() ?? 0);
+                if ($user->getId() === 0) {
+                    $user->setLastname($this->plugin->txt('deleted_account'));
+                }
 
                 // pass selection
                 switch ($this->settings->pass_selection) {
