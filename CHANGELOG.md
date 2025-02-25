@@ -2,7 +2,10 @@
 
 Plugin versions for different ILIAS releases are provided in separate branches of this repository.
 
-## 9.3.1 for ILIAS 9 (2025-02-27)
+## 9.3.2 for ILIAS 9 (2025-02-25)
+- Fix: getting the processing time from a time limited test
+
+## 9.3.1 for ILIAS 9 (2025-01-27)
 - Fix: allow archive creation for tests with deleted user accounts
 
 ## 9.3.0 for ILIAS 9 (2025-01-06)
