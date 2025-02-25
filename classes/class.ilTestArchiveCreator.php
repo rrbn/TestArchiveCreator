@@ -250,7 +250,7 @@ class ilTestArchiveCreator
         $info[$this->lng->txt("tst_nr_of_tries")] = $this->testObj->getNrOfTries() > 0 ?
             $this->testObj->getNrOfTries() : $this->lng->txt('unlimited');
         $info[$this->lng->txt("tst_processing_time_duration")] = $this->testObj->getEnableProcessingTime() ?
-            $this->testObj->getProcessingTimeAsMinutes() . ' ' . $this->lng->txt('minutes') : $this->lng->txt('unlimited');
+            (int) ($this->testObj->getProcessingTimeInSeconds() / 60) . ' ' . $this->lng->txt('minutes') : $this->lng->txt('unlimited');
         $info[$this->lng->txt("tst_shuffle_questions")] = $this->testObj->getShuffleQuestions() ?
             $this->lng->txt("tst_shuffle_questions_description") : $this->lng->txt('no');
         $info[$this->lng->txt("tst_text_count_system")] = $this->lng->txt(($this->testObj->getCountSystem() == COUNT_PARTIAL_SOLUTIONS) ? "tst_count_partial_solutions" : "tst_count_correct_solutions");
