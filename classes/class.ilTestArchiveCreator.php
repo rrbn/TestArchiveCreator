@@ -320,7 +320,7 @@ class ilTestArchiveCreator
             ilTestEvaluationData::FILTER_BY_NONE,
             '',
             false,
-            false
+            true
         ))
             ->withAllResults()
             ->getContent();
@@ -331,7 +331,7 @@ class ilTestArchiveCreator
             ilTestEvaluationData::FILTER_BY_NONE,
             '',
             false,
-            false
+            true
         ))
             ->withResultsPage()
             ->withUserPages()

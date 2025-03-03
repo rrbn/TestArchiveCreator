@@ -2,6 +2,9 @@
 
 Plugin versions for different ILIAS releases are provided in separate branches of this repository.
 
+## 9.3.3 for ILIAS 9 (2025-03-03)
+- Fix: export results for scored passes only (like in results export on export tab)
+
 ## 9.3.2 for ILIAS 9 (2025-02-25)
 - Fix: getting the processing time from a time limited test
 
