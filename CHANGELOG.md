@@ -2,6 +2,11 @@
 
 Plugin versions for different ILIAS releases are provided in separate branches of this repository.
 
+## 9.3.4 for ILIAS 9 (2025-07-07)
+- Fix: Export of SingleChoice Question with Feedback does not work
+  https://mantis.ilias.de/view.php?id=44857
+  This could only be fixed by deactiating the inline feedback for the output
+
 ## 9.3.3 for ILIAS 9 (2025-03-03)
 - Fix: export results for scored passes only (like in results export on export tab)
 

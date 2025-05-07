@@ -459,7 +459,10 @@ class ilTestArchiveCreator
                     true,
                     false,
                     true,
-                    false
+                    false,
+                    true,
+                    false,
+
                 );
                 $content = $this->addILIASPage((int) $question_id, $content);
 
@@ -596,12 +599,22 @@ class ilTestArchiveCreator
                                 false,  // $show_feedback
                                 false,  // $show_correct_solution
                                 $question_gui instanceof assFileUploadGUI,   // $show_manual_scoring
-                                true    // $show_question_text
+                                true,    // $show_question_text
+                                false,                      // $show_inline_feedback
                             );
                             $html_answer = $this->addILIASPage((int) $row['qid'], $html_answer);
 
                             if ($this->settings->answers_with_best_solution) {
-                                $html_solution = $question_gui->getSolutionOutput($active_id, $pass, false, false, true, false, true);
+                                $html_solution = $question_gui->getSolutionOutput($active_id, $pass,
+                                    false,
+                                    false,
+                                    true,
+                                    false,
+                                    true,
+                                    false,
+                                    true,
+                                    false
+                                );
                                 $html_solution = $this->addILIASPage((int) $row['qid'], $html_solution);
                             }
 
