@@ -2,7 +2,10 @@
 
 Plugin versions for different ILIAS releases are provided in separate branches of this repository.
 
-## 9.3.4 for ILIAS 9 (2025-07-07)
+## 9.3.5 for ILIAS 9 (2025-05-21)
+Fix: Archive created without .zip suffix
+
+## 9.3.4 for ILIAS 9 (2025-05-07)
 - Fix: Export of SingleChoice Question with Feedback does not work
   https://mantis.ilias.de/view.php?id=44857
   This could only be fixed by deactiating the inline feedback for the output
